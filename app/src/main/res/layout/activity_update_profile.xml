@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fillViewport="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:fitsSystemWindows="true">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/update_profile_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/update_profile"
+                android:textColor="@color/pink_A400"
+                android:textSize="@dimen/action_bar_name_size" />
+        </android.support.v7.widget.Toolbar>
+
+        <FrameLayout
+            android:id="@+id/fl_upload_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/update_profile_toolbar"
+            android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/iv_upload_photo"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:background="@color/white" />
+
+            <ImageView
+                android:id="@+id/iv_layer"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:src="@drawable/trans_round" />
+        </FrameLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/il_update_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/fl_upload_image">
+
+            <EditText
+                android:id="@+id/et_update_user_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/et_line"
+                android:hint="@string/username"
+                android:inputType="textPersonName" />
+        </android.support.design.widget.TextInputLayout>
+
+        <com.tingsic.View.LoadingView
+            android:id="@+id/loader_update_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/il_update_user_name"
+            android:layout_alignEnd="@id/il_update_user_name"
+            android:layout_marginEnd="5dp"
+            android:visibility="gone" />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/il_update_first_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/il_update_user_name">
+
+            <EditText
+                android:id="@+id/et_update_first_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/et_line"
+                android:hint="@string/first_name"
+                android:inputType="textPersonName" />
+        </android.support.design.widget.TextInputLayout>
+
+        <EditText
+            android:id="@+id/et_update_lasst_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/il_update_first_name"
+            android:layout_margin="5dp"
+            android:background="@drawable/et_line"
+            android:hint="@string/last_name"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/et_update_bio"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_below="@id/et_update_lasst_name"
+            android:layout_margin="5dp"
+            android:background="@drawable/et_line"
+            android:hint="@string/bio"
+            android:inputType="textMultiLine"
+            android:longClickable="false"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/limit_bio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/et_update_bio"
+            android:layout_alignParentEnd="true"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/limit_bio_length"
+            android:textColor="@color/pink_A400" />
+
+        <EditText
+            android:id="@+id/et_update_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/limit_bio"
+            android:layout_margin="5dp"
+            android:background="@drawable/et_line"
+            android:drawableStart="@drawable/ic_email"
+            android:drawablePadding="10dp"
+            android:hint="@string/e_mail"
+            android:inputType="textEmailAddress" />
+
+        <EditText
+            android:id="@+id/et_update_insta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/et_update_email"
+            android:layout_margin="5dp"
+            android:background="@drawable/et_line"
+            android:drawableStart="@drawable/ic_instagram"
+            android:drawablePadding="10dp"
+            android:hint="@string/instagram_username"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/et_update_youtube"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/et_update_insta"
+            android:layout_margin="5dp"
+            android:background="@drawable/et_line"
+            android:drawableStart="@drawable/ic_youtube"
+            android:drawablePadding="10dp"
+            android:hint="@string/youtube_channel"
+            android:inputType="textPersonName" />
+
+
+        <com.tingsic.View.LoadingView
+            android:id="@+id/update_profile_loader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@+id/rlUpdateProgress"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent_black_20"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:id="@+id/update_circularProgressbar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:layout_centerInParent="true"
+                android:indeterminate="false"
+                android:max="100"
+                android:progress="25"
+                android:progressDrawable="@drawable/circular"
+                android:secondaryProgress="100" />
+
+            <ImageView
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/whitecircle" />
+
+            <TextView
+                android:id="@+id/tv_update_progress"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="25%"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="20sp" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</ScrollView>
