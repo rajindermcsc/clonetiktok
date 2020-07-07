@@ -100,9 +100,9 @@ public class MainActivity extends TabActivity implements TabHost.OnTabChangeList
         specAdd.setContent(new Intent(this, AddActivity.class));
 
 
-        TabHost.TabSpec specBadge = tab.newTabSpec("contest");
-        specBadge.setIndicator("", getResources().getDrawable(R.drawable.ic_badge_white));
-        specBadge.setContent(new Intent(this, ContestActivity.class));
+//        TabHost.TabSpec specBadge = tab.newTabSpec("contest");
+//        specBadge.setIndicator("", getResources().getDrawable(R.drawable.ic_badge_white));
+//        specBadge.setContent(new Intent(this, ContestActivity.class));
 
 
         TabHost.TabSpec specUser = tab.newTabSpec("user");
@@ -112,14 +112,14 @@ public class MainActivity extends TabActivity implements TabHost.OnTabChangeList
         tab.addTab(specHome);
         tab.addTab(specSearch);
         tab.addTab(specAdd);
-        tab.addTab(specBadge);
+//        tab.addTab(specBadge);
         tab.addTab(specUser);
 
         tab.getTabWidget().getChildAt(0).setBackground(null);
         tab.getTabWidget().getChildAt(1).setBackground(null);
         tab.getTabWidget().getChildAt(2).setBackground(null);
+//        tab.getTabWidget().getChildAt(3).setBackground(null);
         tab.getTabWidget().getChildAt(3).setBackground(null);
-        tab.getTabWidget().getChildAt(4).setBackground(null);
 
         Log.i(TAG, "initView: strip" + tab.getTabWidget().isStripEnabled());
 
