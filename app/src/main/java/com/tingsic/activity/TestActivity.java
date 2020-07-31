@@ -2,8 +2,8 @@ package com.tingsic.activity;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -50,6 +50,7 @@ public class TestActivity extends AppCompatActivity {
         Gson gson = new Gson();
 
         final UploadVideoResponse response = gson.fromJson(data, UploadVideoResponse.class);
+        Log.e(TAG, "onCreate: "+response.getData());
 
         ImageView imageView = findViewById(R.id.iv_uploaded_thumb);
         Picasso.get().load(FourChamp.VIDEO_BASE_URL + response.getThumbData()).into(imageView);

@@ -4,15 +4,17 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PagerSnapHelper;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SnapHelper;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+//import androidx.recyclerview.widget.PagerSnapHelper;
+import androidx.recyclerview.widget.PagerSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
+//import androidx.recyclerview.widget.SnapHelper;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -77,6 +79,10 @@ public class PopularVideoFragment extends Fragment implements RecyclerView.OnChi
     private boolean is_visible_to_user;
     com.google.android.gms.ads.InterstitialAd interstitialAd;
     com.facebook.ads.InterstitialAd fbinterstitialAd;
+    PlayerView playerView;
+    int first_time=1;
+
+    SimpleExoPlayer privious_player;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -200,7 +206,6 @@ public class PopularVideoFragment extends Fragment implements RecyclerView.OnChi
     }
 
     // when we swipe for another video this will relaese the privious player
-    SimpleExoPlayer privious_player;
 
     public void Release_Privious_Player() {
         if (privious_player != null) {
@@ -209,7 +214,7 @@ public class PopularVideoFragment extends Fragment implements RecyclerView.OnChi
         }
     }
 
-    private static final String VIDEO_BASE_URL = "https://websoftquality.com/uploads/videos/";
+    private static final String VIDEO_BASE_URL = "http://tingsic.com/uploads/videos/";
 
     public void Set_Player(final int currentPage) {
 
@@ -222,7 +227,7 @@ public class PopularVideoFragment extends Fragment implements RecyclerView.OnChi
 
         MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(Uri.parse(VIDEO_BASE_URL + item.getVideoUrl()));
-        Log.d("resp", VIDEO_BASE_URL + item.getVideoUrl());
+        Log.e("resp", VIDEO_BASE_URL + item.getVideoUrl());
 
 
         player.prepare(videoSource);
@@ -232,7 +237,7 @@ public class PopularVideoFragment extends Fragment implements RecyclerView.OnChi
         player.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
 
         View layout = layoutManager.findViewByPosition(currentPage);
-        final PlayerView playerView = layout.findViewById(R.id.playerview);
+        playerView = layout.findViewById(R.id.playerview);
         indicatorView = layout.findViewById(R.id.avi);
         playerView.setPlayer(player);
 
@@ -332,6 +337,15 @@ public class PopularVideoFragment extends Fragment implements RecyclerView.OnChi
     @Override
     public void onResume() {
         super.onResume();
+        Log.e(TAG, "onResume: ");
+        Log.e(TAG, "onResume: "+currentPage);
+        if (first_time==1){
+            first_time++;
+        }
+        else {
+
+            privious_player.setPlayWhenReady(true);
+        }
         if ((privious_player != null && is_visible_to_user) && !is_fragment_exits()) {
             privious_player.setPlayWhenReady(true);
         }
@@ -350,8 +364,11 @@ public class PopularVideoFragment extends Fragment implements RecyclerView.OnChi
     @Override
     public void onPause() {
         super.onPause();
+//        stopMedia();
         if (privious_player != null) {
             privious_player.setPlayWhenReady(false);
+//            privious_player.stop();
+//            privious_player.release();
         }
     }
 
@@ -388,10 +405,20 @@ public class PopularVideoFragment extends Fragment implements RecyclerView.OnChi
 
             @Override
             public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
+                Log.e(TAG, "onResponse: "+response.message());
+                Log.e(TAG, "onResponse: "+response.errorBody());
+//                Log.e(TAG, "onResponse: "+response.body().getVideos());
+//                Log.e(TAG, "onResponse: "+response.body().getVideosUrl());
+                Log.e(TAG, "onResponse: "+response.toString());
+//                Log.e(TAG, "onResponse: "+response.raw().body());
+                Log.e(TAG, "onResponse: "+response.raw().request().url());
+//                Log.e("<<<Response>>>", Gson().toJson(response.body()));
                 if (page == 1) {
                     loadingView.setVisibility(View.GONE);
                 }
-                Log.i(TAG, "onResponse: " + response.code());
+//                Log.e(TAG, "onResponse: " + response.code());
+//                Log.e(TAG, "onResponse: " + response.body().toString());
+//                Log.e(TAG, "onResponse: " + response.body().getVideos());
                 if (response.isSuccessful()) {
                     if (response.body().getSuccess() == 1) {
 
@@ -502,12 +529,16 @@ public class PopularVideoFragment extends Fragment implements RecyclerView.OnChi
 
     }
 
+
+
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         if (adapter != null) adapter.onDestroy();
         if (privious_player != null) {
-            privious_player.release();
+//            privious_player.stop();
+//            privious_player.release();
         }
     }
     @Override

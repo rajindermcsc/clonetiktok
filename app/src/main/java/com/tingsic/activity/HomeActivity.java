@@ -1,17 +1,18 @@
 package com.tingsic.activity;
 
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
+//import com.google.android.material.tabs.TabLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.material.tabs.TabLayout;
 import com.tingsic.Fragment.FollowingVideoFragment;
 import com.tingsic.Fragment.LiveVideoFragment;
 import com.tingsic.Fragment.PopularVideoFragment;
@@ -54,7 +55,7 @@ public class HomeActivity extends AppCompatActivity implements TabLayout.BaseOnT
         tlVideo.addOnTabSelectedListener(this);
         tlVideo.setTabMode(TabLayout.MODE_SCROLLABLE);
         tlVideo.addTab(tlVideo.newTab().setText("Popular"),true);
-        tlVideo.addTab(tlVideo.newTab().setText("Live\nContest"));
+//        tlVideo.addTab(tlVideo.newTab().setText("Live\nContest"));
         tlVideo.addTab(tlVideo.newTab().setText("Following"));
 
 
@@ -70,7 +71,7 @@ public class HomeActivity extends AppCompatActivity implements TabLayout.BaseOnT
             TabLayout.Tab tab = tlVideo.getTabAt(i);
             LinearLayout relativeLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.tab_background, tlVideo, false);
 
-            if (i==2) {
+            if (i==1) {
                 View view = relativeLayout.findViewById(R.id.tabDivider);
                 view.setVisibility(View.GONE);
             }
@@ -104,10 +105,10 @@ public class HomeActivity extends AppCompatActivity implements TabLayout.BaseOnT
             case 0 :
                 replaceFragment(new PopularVideoFragment());
                 break;
+//            case 1:
+//                replaceFragment(new LiveVideoFragment());
+//                break;
             case 1:
-                replaceFragment(new LiveVideoFragment());
-                break;
-            case 2:
                 replaceFragment(new FollowingVideoFragment());
                 break;
         }

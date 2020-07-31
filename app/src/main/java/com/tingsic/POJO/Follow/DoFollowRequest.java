@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import com.tingsic.POJO.Auth;
 
 public class DoFollowRequest {
-
+//
     @SerializedName("auth")
     @Expose
     private Auth auth;

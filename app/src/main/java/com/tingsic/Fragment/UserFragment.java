@@ -7,15 +7,17 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
+//import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,9 +31,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 import com.tingsic.API.ApiClient;
 import com.tingsic.API.ApiInterface;
+import com.tingsic.API.Api_Interface;
+import com.tingsic.API.MessageResponse;
 import com.tingsic.Adapter.UserPostAdapter;
 import com.tingsic.ItemDecoration.GridSpacingItemDecoration;
 import com.tingsic.Listner.OnFollowerListener;
@@ -63,6 +69,8 @@ import io.branch.referral.util.ShareSheetStyle;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class UserFragment extends Fragment {
     private static final String TAG = UserFragment.class.getSimpleName();
@@ -85,6 +93,7 @@ public class UserFragment extends Fragment {
     private int fanCount = 0;
 
     private String profileUrl = "";
+    static Retrofit retrofit = null;
 
     public void setOnVideoListener(OnVideoListener onVideoListener) {
         this.onVideoListener = onVideoListener;
@@ -191,7 +200,7 @@ public class UserFragment extends Fragment {
 
                         final String userId = response.body().getData().getUserId();
                         String userName = response.body().getData().getUsername();
-                        Log.i("onResponse", "onResponse: "+userId);
+                        Log.e("onResponse", "onResponse: "+userId);
 
                         tvTitle.setText(response.body().getData().getFirstName()+" "+response.body().getData().getLastName());
                         int fansCount = Integer.parseInt(response.body().getData().getFollowerCount());
@@ -278,7 +287,7 @@ public class UserFragment extends Fragment {
 
                         Button btnYoutube = view.findViewById(R.id.btnYoutube);
                         final String youtubeUrl = response.body().getData().getYoutubeUrl();
-                        Log.d("TAG", "onResponse() returned: " + youtubeUrl);
+                        Log.e("TAG", "onResponse() returned: " + youtubeUrl);
                         if (youtubeUrl.isEmpty()) {
                             btnYoutube.setVisibility(View.INVISIBLE);
                         }
@@ -325,55 +334,157 @@ public class UserFragment extends Fragment {
 
     }
 
-    private void doFollowing(String service, String type, String userId) {
-        DoFollowRequest followRequest = new DoFollowRequest();
+    public static class Api_Client {
 
-        Auth auth = new Auth();
-        int id = PreferenceManager.getDefaultSharedPreferences(getContext()).getInt("id",-111);
-        String token = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token","null");
+        public static final String BASE_URL = "http://tingsic.com/WebService/";
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
 
-        if (id == -111 || token.equals("null")) {
-            showLogInFragment();
-            return;
+
+        public static Retrofit getClient() {
+            if (retrofit==null) {
+                retrofit = new Retrofit.Builder()
+                        .baseUrl(BASE_URL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+            }
+
+            return retrofit;
+
         }
+    }
 
-        auth.setToken(token);
-        auth.setId(id);
+    private void doFollowing(String service, String type, String userId) {
 
-        Data data = new Data();
-        data.setUserId(""+id);
-        data.setFuserId(userId);
-        data.setType(type);
+        try {
+//            Api_Interface apiService =
+//                    Api_Client.getClient().create(Api_Interface.class);
 
-        com.tingsic.POJO.Follow.Request request = new com.tingsic.POJO.Follow.Request();
-        request.setData(data);
 
-        followRequest.setAuth(auth);
-        followRequest.setRequest(request);
-        followRequest.setService(service);
 
-        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
-        Call<DoFollowResponse> responseCall = apiInterface.doFollow(followRequest);
-        responseCall.enqueue(new Callback<DoFollowResponse>() {
-            @Override
-            public void onResponse(Call<DoFollowResponse> call, Response<DoFollowResponse> response) {
-                btnFollow.setClickable(true);
-                if (response.isSuccessful()) {
-                    if (response.body().getSuccess() == 1) {
-                        Log.d("UserFragment", "onResponse() returned: " + response.body().getMessage());
+            Log.e(TAG, "doFollowing: "+service);
+            DoFollowRequest followRequest = new DoFollowRequest();
+
+            Auth auth = new Auth();
+            int id = PreferenceManager.getDefaultSharedPreferences(getContext()).getInt("id",-111);
+            String token = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token","null");
+
+            if (id == -111 || token.equals("null")) {
+                showLogInFragment();
+                return;
+            }
+
+            auth.setToken(token);
+            auth.setId(id);
+
+            Data data = new Data();
+            data.setUserId(""+id);
+            data.setFuserId(userId);
+            data.setType(type);
+
+            com.tingsic.POJO.Follow.Request request = new com.tingsic.POJO.Follow.Request();
+            request.setData(data);
+            Log.e(TAG, "doFollowing: "+request.getData().getFuserId());
+            Log.e(TAG, "doFollowing: "+request.getData().getType());
+            Log.e(TAG, "doFollowing: "+request.getData().getUserId());
+
+            followRequest.setAuth(auth);
+            followRequest.setRequest(request);
+            followRequest.setService(service);
+
+
+
+
+            ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+            Call<DoFollowResponse> responseCall = apiInterface.doFollow(followRequest);
+            responseCall.enqueue(new Callback<DoFollowResponse>() {
+                @Override
+                public void onResponse(Call<DoFollowResponse> call, Response<DoFollowResponse> response) {
+                    btnFollow.setClickable(true);
+                    if (response.isSuccessful()) {
+                        if (response.body().getSuccess() == 1) {
+                            Log.e("UserFragment", "onResponse() returned: " + response.body().getMessage());
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<DoFollowResponse> call, Throwable t) {
-                btnFollow.setClickable(true);
-            }
-        });
+                @Override
+                public void onFailure(Call<DoFollowResponse> call, Throwable t) {
+                    btnFollow.setClickable(true);
+                }
+            });
 
 
+
+
+//            Api_Interface apiService =
+//                    Api_Client.getClient().create(Api_Interface.class);
+//
+//            Call<DoFollowResponse> responseCall = apiService.doFollow(followRequest);
+//            responseCall.enqueue(new Callback<DoFollowResponse>() {
+//                @Override
+//                public void onResponse(Call<DoFollowResponse> call, Response<DoFollowResponse> response) {
+//                    Log.e(TAG, "onResponse: "+response.message());
+//                    Log.e(TAG, "onResponse: "+response.errorBody());
+//                    Log.e(TAG, "onResponse: "+response.isSuccessful());
+//                    Log.e(TAG, "onResponse: "+response.raw().request().url());
+//                    btnFollow.setClickable(true);
+//                    if (response.isSuccessful()) {
+////                        if (response.body().getMessage() == 1) {
+////                            Log.e("UserFragment", "onResponse() returned: " + response.body().getMessage());
+////                        }
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Call<DoFollowResponse> call, Throwable t) {
+//                    btnFollow.setClickable(true);
+//                }
+//            });
+
+
+//            Call<MessageResponse> call = apiService.send_otp(s);
+//            call.enqueue(new Callback<MessageResponse>() {
+//                @Override
+//                public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
+////                 sessionId = response.body().getDetails();
+//
+//                    dialog.hide();
+//                    if (response.isSuccessful()) {
+//                        Log.e(TAG, "onResponse: ");
+//                        Log.e("SenderIDsucc", response.body().getData());
+//                        Log.e("SenderIDmess", response.body().getMessage());
+////                        Log.e("SenderID", response.body().getSuccess());
+//                        PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("otp",response.body().getData()).apply();
+////                            customDialogClass=new CustomDialogClass(getActivity());
+//                    }
+//                    else {
+//                        Log.e(TAG, "onResponse: ");
+//                    }
+//
+//                    //you may add code to automatically fetch OTP from messages.
+//                }
+//
+//                @Override
+//                public void onFailure(Call<MessageResponse> call, Throwable t) {
+//                    Log.e("ERROR", t.toString());
+//                }
+//
+//            });
+        }
+        catch (Exception e){
+            Log.e(TAG, "sendotpexx: "+e.getMessage());
+        }
 
     }
+
+
+
+
+
+
+
 
     private void initView(final View view) {
 
@@ -484,7 +595,7 @@ public class UserFragment extends Fragment {
         String json = "{\"id\":\""+id+"\",\"isProfile\":false}";
         String title = "Tingsic profile";
 
-        Log.i("ShareJson","Json Object: "+json);
+        Log.e("ShareJson","Json Object: "+json);
         BranchUniversalObject buo = new BranchUniversalObject()
                 .setCanonicalIdentifier("content/12345")
                 .setTitle("Tingsic")
@@ -498,7 +609,7 @@ public class UserFragment extends Fragment {
                 .setFeature("sharing")
                 .setCampaign("Tingsic contest")
                 .setStage("User")
-                .addControlParameter("$desktop_url", "https://websoftquality.com/playstore.php")
+                .addControlParameter("$desktop_url", "http://tingsic.com")
                 .addControlParameter("custom", "data")
                 .addControlParameter("custom_random", Long.toString(Calendar.getInstance().getTimeInMillis()));
 
@@ -531,7 +642,7 @@ public class UserFragment extends Fragment {
             }
             @Override
             public void onLinkShareResponse(String sharedLink, String sharedChannel, BranchError error) {
-                Log.i("Branch", "onLinkShareResponse: SharingLink: "+sharedLink);
+                Log.e("Branch", "onLinkShareResponse: SharingLink: "+sharedLink);
             }
             @Override
             public void onChannelSelected(String channelName) {

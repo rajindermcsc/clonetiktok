@@ -2,9 +2,9 @@ package com.tingsic.Adapter;
 
 import android.content.Context;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +36,7 @@ import retrofit2.Response;
 
 public class CommentAdapter extends RecyclerView.Adapter implements View.OnClickListener {
 
-    private static final String PROFILE_PIC = "https://websoftquality.com/uploads/profile_pic/";
+    private static final String PROFILE_PIC = "http://tingsic.com/uploads/profile_pic/";
 
     private static final int ITEM_VIEW = 381;
     private static final int LOADING_VIEW = 180;

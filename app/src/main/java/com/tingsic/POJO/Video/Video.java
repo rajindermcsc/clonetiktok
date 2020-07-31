@@ -59,6 +59,10 @@ public class Video {
     @SerializedName("description")
     @Expose
     private String description;
+
+    @SerializedName("hash_tag")
+    @Expose
+    private String hashtag;
     @SerializedName("comment")
     @Expose
     private List<Comment> comment = null;
@@ -90,6 +94,14 @@ public class Video {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getHashtag() {
+        return hashtag;
+    }
+
+    public void setHashtag(String hashtag) {
+        this.hashtag = hashtag;
     }
 
     public String getContId() {
@@ -229,6 +241,7 @@ public class Video {
                 ", deletionDatetime='" + deletionDatetime + '\'' +
                 ", profilepic='" + profilepic + '\'' +
                 ", totalComment='" + totalComment + '\'' +
+                ", hashtag='" + hashtag + '\'' +
                 ", comment=" + comment +
                 '}';
     }

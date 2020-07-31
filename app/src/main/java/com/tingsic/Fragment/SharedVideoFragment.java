@@ -17,13 +17,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.FileProvider;
+import androidx.fragment.app.Fragment;
+//import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
+//import androidx.core.content.FileProvider;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,7 +55,10 @@ import com.tingsic.R;
 import com.tingsic.Transformation.CircleTransform;
 import com.tingsic.Utils.PreciseCount;
 import com.tingsic.View.LikeButton.LikeButton;
+import com.tingsic.activity.AddActivity;
+import com.tingsic.activity.MainActivity;
 import com.tingsic.activity.UserActivity;
+import com.tingsic.activity.VideoRecorderActivity;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -81,13 +86,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.app.Activity.RESULT_OK;
+
 public class SharedVideoFragment extends Fragment implements View.OnClickListener,
         LikeButton.OnLikeEventListener,
         CommentBSFragment.OnCommentAddListener,
         CommentAdapter.OnCommentRemoveListener {
 
-    private static final String VIDEO_BASE_URL = "https://websoftquality.com/uploads/videos/";
-    private static final String PROFIL_URL = "https://websoftquality.com/uploads/profile_pic/";
+    private static final String VIDEO_BASE_URL = "http://tingsic.com/uploads/videos/";
+    private static final String PROFIL_URL = "http://tingsic.com/uploads/profile_pic/";
     private String[] ids;
 
 //    private VideoPlayer player;
@@ -98,6 +105,7 @@ public class SharedVideoFragment extends Fragment implements View.OnClickListene
     private ArrayList<Long> list = new ArrayList<>();
     private ArrayList<VideoAdapter.DownloadM> mlist = new ArrayList<>();
     private String filename;
+
 
     @Nullable
     @Override
@@ -117,6 +125,10 @@ public class SharedVideoFragment extends Fragment implements View.OnClickListene
 
         return view;
     }
+
+
+
+
 
     private void initView(View view, String json) {
 
@@ -152,7 +164,7 @@ public class SharedVideoFragment extends Fragment implements View.OnClickListene
 //        player.currentTimeTextView.setVisibility(View.GONE);
 //        player.startButton.performClick();
 
-        TextView tvComment, tvShare, tvDownload, tvVideUsername, tvVideoContestName;
+        TextView tvComment, tvShare, tvDownload, tvVideUsername, tvVideoContestName, btnadd,tv_video_hashtag;
         ImageView ivUser, ivWin;
         LikeButton likeButton;
         //tvLike = itemView.findViewById(R.id.btnLike);
@@ -161,6 +173,7 @@ public class SharedVideoFragment extends Fragment implements View.OnClickListene
         tvDownload = view.findViewById(R.id.btndownload);
         tvVideUsername = view.findViewById(R.id.tv_video_username);
         tvVideoContestName = view.findViewById(R.id.tv_video_contest_name);
+        tv_video_hashtag = view.findViewById(R.id.tv_video_hashtag);
 
         ivUser = view.findViewById(R.id.iv_video_user);
         ivWin = view.findViewById(R.id.iv_win);
@@ -189,6 +202,7 @@ public class SharedVideoFragment extends Fragment implements View.OnClickListene
         tvComment.setText(PreciseCount.from(video.getTotalComment()));
         tvShare.setText(PreciseCount.from(video.getTotalShare()));
         tvVideUsername.setText(getContext().getString(R.string.user_name, video.getUsername()));
+        tv_video_hashtag.setText(video.getHashtag());
         tvVideoContestName.setText(video.getContestTitle());
 
         String profileUrl = video.getProfilepic();
@@ -216,6 +230,16 @@ public class SharedVideoFragment extends Fragment implements View.OnClickListene
                 }
             }
         }
+
+
+
+//        btnadd.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivityForResult(new Intent(getContext(), VideoRecorderActivity.class), CAMERA);
+//                ((Activity)getContext()).overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top);
+//            }
+//        });
 
 
 
@@ -268,7 +292,7 @@ public class SharedVideoFragment extends Fragment implements View.OnClickListene
                     @Override
                     public void onProgress(double progress) {
 
-                        Log.d("resp", "" + (int) (progress * 100));
+                        Log.e("resp", "" + (int) (progress * 100));
                         // Functions.Show_loading_progress((int)((progress*100)/2)+50);
 
                     }
@@ -285,13 +309,13 @@ public class SharedVideoFragment extends Fragment implements View.OnClickListene
 
                     @Override
                     public void onCanceled() {
-                        Log.d("resp", "onCanceled");
+                        Log.e("resp", "onCanceled");
                     }
 
                     @Override
                     public void onFailed(Exception exception) {
 
-                        Log.d("resp", exception.toString());
+                        Log.e("resp", exception.toString());
 
                         try {
 
@@ -412,6 +436,7 @@ public class SharedVideoFragment extends Fragment implements View.OnClickListene
 
     private void initBranch() {
 
+        Log.e("sharevideo", "initBranch: ");
         //todo change desktop url
 
         String vUrl = video.getVideoUrl();
@@ -424,12 +449,12 @@ public class SharedVideoFragment extends Fragment implements View.OnClickListene
 
         String title = video.getContestTitle();
 
-        Log.i("ShareJson", "Json Object: " + json);
+        Log.e("ShareJson", "Json Object: " + json);
         BranchUniversalObject buo = new BranchUniversalObject()
                 .setCanonicalIdentifier("content/12345")
                 .setTitle("Tingsic")
                 .setContentImageUrl(url)
-                .setContentDescription("Check out this new video")
+                .setContentDescription("Watch this amazing video on Tingsic App")
                 .setContentIndexingMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
                 .setLocalIndexMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
                 .setContentMetadata(new ContentMetadata().addCustomMetadata("data", json));
@@ -438,7 +463,7 @@ public class SharedVideoFragment extends Fragment implements View.OnClickListene
                 .setFeature("sharing")
                 .setCampaign(title)
                 .setStage("Tingsic user")
-                .addControlParameter("$desktop_url", "http://tiktukreward.xitijapp.com/playstore.php")
+                .addControlParameter("$desktop_url", "http://tingsic.com")
                 .addControlParameter("custom", "data")
                 .addControlParameter("custom_random", Long.toString(Calendar.getInstance().getTimeInMillis()));
 
@@ -473,13 +498,13 @@ public class SharedVideoFragment extends Fragment implements View.OnClickListene
 
             @Override
             public void onLinkShareResponse(String sharedLink, String sharedChannel, BranchError error) {
-                Log.i("Branch", "onLinkShareResponse: SharingLink: " + sharedLink);
+                Log.e("Branch", "onLinkShareResponse: SharingLink: " + sharedLink);
             }
 
             @Override
             public void onChannelSelected(String channelName) {
 
-                Log.i("Branch", "onChannelSelected: " + channelName);
+                Log.e("Branch", "onChannelSelected: " + channelName);
                 getShareAPI();
 
             }
@@ -507,7 +532,7 @@ public class SharedVideoFragment extends Fragment implements View.OnClickListene
         responseCall.enqueue(new Callback<LikenShareResponse>() {
             @Override
             public void onResponse(Call<LikenShareResponse> call, Response<LikenShareResponse> response) {
-                Log.i("VideoAdapter", "onResponse: " + response.code());
+                Log.e("VideoAdapter", "onResponse: " + response.code());
                 if (response.isSuccessful()) {
                     if (response.body().getSuccess() == 1) {
                         int share = Integer.parseInt(video.getTotalShare());
@@ -666,7 +691,7 @@ public class SharedVideoFragment extends Fragment implements View.OnClickListene
         @Override
         public void onReceive(Context context, Intent intent) {
             long refrenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-            Log.i("INrefrenceId", "" + refrenceId);
+            Log.e("INrefrenceId", "" + refrenceId);
 //            if (list.isEmpty()) {
             File file;
 
@@ -684,12 +709,12 @@ public class SharedVideoFragment extends Fragment implements View.OnClickListene
 
 
                     String channelid = context.getString(R.string.default_notification_channel_id);
-                    Log.i("Path", "" + path.toString());
+                    Log.e("Path", "" + path.toString());
                     Intent open = new Intent(Intent.ACTION_VIEW);
                     open.setDataAndType(path, "video/*");
                     open.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, open, 0);
-                    Log.i("INSIDE refrenceId", "" + refrenceId);
+                    Log.e("INSIDE refrenceId", "" + refrenceId);
                     Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                     NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelid)
                             .setSmallIcon(R.mipmap.ic_launcher)

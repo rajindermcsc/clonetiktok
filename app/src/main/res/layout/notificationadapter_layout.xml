@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:id="@+id/mainlayout"
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:minHeight="60dp"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/bellicon"
+            android:layout_marginTop="10dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/bellicon" />
+        <RelativeLayout
+            android:layout_toRightOf="@+id/bellicon"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Notification Title"
+                android:textColor="@color/black"
+                android:textSize="14dp"/>
+            <TextView
+                android:id="@+id/desc"
+                android:layout_below="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Notification Title"
+                android:layout_marginTop="2dp"
+                android:textColor="#d1d1d1"
+                android:textSize="12dp"/>
+            <TextView
+                android:id="@+id/time"
+                android:layout_below="@+id/desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="10 Jul 2018"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/black"
+                android:textSize="12dp"/>
+        </RelativeLayout>
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:background="@color/lightgray"-->
+        <!--&gt;</View>-->
+    </RelativeLayout>
+</RelativeLayout>

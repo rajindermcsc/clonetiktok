@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
@@ -40,7 +40,7 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_centerInParent="true"/>
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/il_first_name"
                     android:layout_width="wrap_content"
                     android:layout_alignParentStart="true"
@@ -55,8 +55,8 @@
                         android:textColorHint="@color/black"
                         android:inputType="textPersonName"
                         android:hint="@string/first_name"/>
-                </android.support.design.widget.TextInputLayout>
-                <android.support.design.widget.TextInputLayout
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/il_last_name"
                     android:layout_width="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -71,9 +71,9 @@
                         android:textColorHint="@color/black"
                         android:inputType="textPersonName"
                         android:hint="@string/last_name"/>
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
             </RelativeLayout>
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/il_mobile"
                 android:layout_width="match_parent"
                 app:hintEnabled="true"
@@ -86,8 +86,8 @@
                     android:textColorHint="@color/black"
                     android:inputType="phone"
                     android:hint="@string/mobile_number"/>
-            </android.support.design.widget.TextInputLayout>
-            <android.support.design.widget.TextInputLayout
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/il_signup_mail"
                 android:layout_width="match_parent"
                 app:hintEnabled="true"
@@ -100,8 +100,8 @@
                     android:textColorHint="@color/black"
                     android:inputType="textWebEmailAddress"
                     android:hint="@string/e_mail"/>
-            </android.support.design.widget.TextInputLayout>
-            <android.support.design.widget.TextInputLayout
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/il_signup_username"
                 android:layout_width="match_parent"
                 app:hintEnabled="true"
@@ -114,9 +114,9 @@
                     android:textColorHint="@color/black"
                     android:inputType="text"
                     android:hint="@string/username" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/il_signup_pass"
                 android:layout_width="match_parent"
                 app:hintEnabled="true"
@@ -129,9 +129,9 @@
                     android:textColorHint="@color/black"
                     android:inputType="textWebPassword"
                     android:hint="@string/password" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/il_pincode"
                 android:layout_width="match_parent"
                 app:hintEnabled="true"
@@ -144,9 +144,9 @@
                     android:textColorHint="@color/black"
                     android:inputType="textWebPassword"
                     android:hint="@string/cnf_password"/>
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/il_referal"
                 android:layout_width="match_parent"
                 app:hintEnabled="true"
@@ -159,7 +159,7 @@
                     android:textColorHint="@color/black"
                     android:inputType="text"
                     android:hint="@string/referal_code"/>
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -49,6 +49,10 @@ public class Data {
     @Expose
     private String email;
 
+    @SerializedName("otp")
+    @Expose
+    private String otp;
+
     public void setFirstName(String firstName) { this.firstName = firstName; }
     public void setLastName(String lastName) { this.lastName = lastName; }
     public void setPincode(String pincode) { this.pincode = pincode; }
@@ -119,5 +123,13 @@ public class Data {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getOtp() {
+        return otp;
+    }
+
+    public void setOtp(String otp) {
+        this.otp = otp;
     }
 }

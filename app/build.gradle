@@ -13,7 +13,7 @@ android {
         config {
             keyAlias 'tingsic'
             keyPassword 'tingsic'
-            storeFile file('E:\\React Native\\Tiktuk demo\\app\\tingsic.jks')
+            storeFile file('E:\\React Native\\Tingsic\\app\\tingsic.jks')
             storePassword 'tingsic'
         }
     }
@@ -23,8 +23,8 @@ android {
         applicationId "com.tingsic"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 2
-        versionName "2.1"
+        versionCode 3
+        versionName "1.0.2"
         renderscriptTargetApi 21
         renderscriptSupportModeEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -57,7 +57,7 @@ dependencies {
     implementation 'com.android.support:design:28.0.0'
     implementation 'com.android.support:exifinterface:28.0.0'
     //implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.squareup.retrofit2:retrofit:2.0.2'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.12.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.0.2'
@@ -82,7 +82,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:18.0.0'
     implementation 'io.branch.sdk.android:library:2.+'
     implementation 'com.facebook.android:audience-network-sdk:5.4.1'
-    //implementation 'com.android.support:multidex:1.0.1'
+    implementation 'com.android.support:multidex:1.0.1'
     //Edit after 30May
     implementation 'com.wonderkiln:camerakit:0.13.1'
     // Dont undo below isoparser dependensi -> may cause unexpected error like compressing issues.
@@ -106,10 +106,21 @@ dependencies {
 //RxJava2
     implementation "io.reactivex.rxjava2:rxkotlin:2.2.0"
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
-
+    implementation 'com.github.stfalcon:smsverifycatcher:0.3.2'
     implementation 'com.wang.avi:library:2.1.3'
+    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation 'com.android.volley:volley:1.0.0'
 
     implementation 'com.facebook.android:audience-network-sdk:5.8.0'
+    implementation 'com.google.firebase:firebase-ads:17.1.2'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
+    def camerax_version = "1.0.0-alpha06"
+    def camerax_ext_version = "1.0.0-alpha06"
+    implementation "androidx.camera:camera-core:$camerax_version"
+    implementation "androidx.camera:camera-camera2:$camerax_version"
+    implementation "androidx.camera:camera-extensions:$camerax_ext_version"
 
 }
 apply plugin: 'com.google.gms.google-services'

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    tools:context=".activity.OtpLogin">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/firstcard"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        card_view:cardCornerRadius="10dp"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@android:color/white">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enter OTP"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:id="@+id/dialogTitle"
+                android:layout_margin="5dp"
+                android:layout_gravity="center"
+                />
+            <EditText
+                android:layout_gravity="center"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/otp"
+                android:layout_margin="5dp"
+                android:hint="Enter OTP"
+                android:inputType="number"
+                android:textColorHint="@color/pink_A400"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SUBMIT"
+                android:textSize="18sp"
+                android:id="@+id/verify_otp"
+                android:gravity="center"
+                android:padding="10dp"
+                android:layout_gravity="center"
+                android:visibility="visible"
+                android:layout_margin="5dp"
+                android:background="@color/pink_A400"
+                android:textColor="#ffffff"
+                />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
+</LinearLayout>

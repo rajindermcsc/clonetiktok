@@ -32,6 +32,21 @@
         android:textAllCaps="false"
         android:textColor="@color/white" />
 
+    <Button
+        android:id="@+id/btn_signup_mobile"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/btn_round"
+        android:includeFontPadding="false"
+        android:paddingStart="75dp"
+        android:paddingEnd="75dp"
+        android:text="@string/sign_up_with_mobile"
+        android:textAllCaps="false"
+        android:textColor="@color/white" />
+
     <TextView
         android:id="@+id/tv_login_terms"
         android:layout_width="match_parent"

@@ -9,8 +9,8 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -41,7 +41,7 @@ import java.util.List;
 
 public class UserPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener {
 
-    private static final String VIDEO_BASE_URL = "https://websoftquality.com/uploads/videos/";
+    private static final String VIDEO_BASE_URL = "http://tingsic.com/uploads/videos/";
     private static final int AD_DISPLAY_FREQUENCY = 7;
     private static final int POST_TYPE = 0;
     private static final int AD_TYPE = 1;

@@ -5,9 +5,9 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+//import com.google.android.material.textfield.TextInputLayout;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -27,6 +27,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.tingsic.API.ApiClient;
 import com.tingsic.API.ApiInterface;
 import com.tingsic.Fragment.LogInBSFragment;
@@ -223,8 +224,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         request.setData(data);
 
+
         service.setService("signup");
         service.setRequest(request);
+
 
 
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
@@ -234,6 +237,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             public void onResponse(Call<SignUpResponse> call, Response<SignUpResponse> response) {
                 if (response.isSuccessful()){
                     if (response.body().getSuccess() == 1){
+                        Log.e(TAG, "onResponse: "+response.raw().request().url());
+                        Log.e(TAG, "onResponse: "+response.body());
 
                         int id = response.body().getUserId();
                         String token = response.body().getToken();
@@ -254,7 +259,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         Intent intent = new Intent(SignUpActivity.this, LogInBSFragment.class);
                         intent.putExtra("isLogInSuccessful",true);
                         setResult(RESULT_OK,intent);
+
+                        Intent intent_main=new Intent(SignUpActivity.this,MainActivity.class);
+                        startActivity(intent_main);
                         finish();
+
 
                     }
                     else if (response.body().getSuccess() == 3) {

@@ -120,6 +120,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
@@ -194,7 +195,7 @@
         android:textColor="@color/white"
         android:visibility="gone" />
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_add"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -208,6 +209,6 @@
             android:text="@string/upload_video"
             android:textColor="@color/pink_A400"
             android:textSize="@dimen/action_bar_name_size" />
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
 </FrameLayout>

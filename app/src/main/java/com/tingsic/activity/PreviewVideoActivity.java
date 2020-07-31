@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +53,7 @@ public class PreviewVideoActivity extends AppCompatActivity implements Player.Ev
     final List<FilterType> filterTypes = FilterType.createFilterList();
     FilterAdapter adapter;
     RecyclerView recylerview;
+    String type;
 
 
     @Override
@@ -62,8 +63,18 @@ public class PreviewVideoActivity extends AppCompatActivity implements Player.Ev
 
 
         select_postion = 0;
+        Intent intent=getIntent();
+        type=intent.getStringExtra("type");
+        if (type.equalsIgnoreCase("selected")){
+            video_url =intent.getStringExtra("video_path");
+            Log.e("TAG", "onCreateurl: "+video_url);
+        }
+        else {
 
-        video_url = Variables.outputfile2;
+            video_url = Variables.outputfile2;
+            Log.e("TAG", "onCreateur: "+video_url);
+        }
+
 
 
         findViewById(R.id.Goback).setOnClickListener(new View.OnClickListener() {
@@ -79,8 +90,13 @@ public class PreviewVideoActivity extends AppCompatActivity implements Player.Ev
         findViewById(R.id.next_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (type.equalsIgnoreCase("selected")){
+                    Save_Video(video_url, Variables.output_filter_file);
+                }
+                else {
 
-                Save_Video(Variables.outputfile2, Variables.output_filter_file);
+                    Save_Video(Variables.outputfile2, Variables.output_filter_file);
+                }
             }
         });
 
@@ -101,7 +117,6 @@ public class PreviewVideoActivity extends AppCompatActivity implements Player.Ev
         recylerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recylerview.setAdapter(adapter);
 
-
     }
 
 
@@ -114,7 +129,7 @@ public class PreviewVideoActivity extends AppCompatActivity implements Player.Ev
         DefaultTrackSelector trackSelector = new DefaultTrackSelector();
         player = ExoPlayerFactory.newSimpleInstance(this, trackSelector);
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this,
-                Util.getUserAgent(this, "TikTok"));
+                Util.getUserAgent(this, "Tingsic"));
 
         MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(Uri.parse(path));
@@ -188,6 +203,8 @@ public class PreviewVideoActivity extends AppCompatActivity implements Player.Ev
     ProgressDialog progressDialog;
 
     public void Save_Video(String srcMp4Path, final String destMp4Path) {
+        Log.e("TAG", "Save_Video: "+srcMp4Path);
+        Log.e("TAG", "Save_Video: "+destMp4Path);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Please wait filter is apply...");
@@ -210,7 +227,7 @@ public class PreviewVideoActivity extends AppCompatActivity implements Player.Ev
                             public void run() {
                                 String root = Environment.getExternalStorageDirectory().toString();
                                 String audio_file = root + "/" + Variables.SelectedAudio;
-                                MergeVideoAudio merge_video_audio = new MergeVideoAudio(PreviewVideoActivity.this);
+                                MergeVideoAudio merge_video_audio = new MergeVideoAudio(PreviewVideoActivity.this,srcMp4Path,destMp4Path);
                                 merge_video_audio.setType(1);
                                 merge_video_audio.doInBackground(audio_file, Variables.output_filter_file, Variables.output_filter_file2);
                                 progressDialog.dismiss();
@@ -238,27 +255,28 @@ public class PreviewVideoActivity extends AppCompatActivity implements Player.Ev
     }
 
 
-    public void GotopostScreen() {
-
-        /*Intent intent =new Intent(PreviewVideoActivity.this,PostVideoActivity.class);
-        //intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-        //startActivity(intent);
-        startActivityForResult(intent,270);
-        overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);*/
-        Intent intent = new Intent();
-        intent.putExtra("video_path", Variables.output_filter_file);
-        setResult(RESULT_OK, intent);
-        finish();
-
-    }
+//    public void GotopostScreen() {
+//
+//        /*Intent intent =new Intent(PreviewVideoActivity.this,PostVideoActivity.class);
+//        //intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+//        //startActivity(intent);
+//        startActivityForResult(intent,270);
+//        overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);*/
+//        Intent intent = new Intent();
+//        intent.putExtra("video_path", Variables.output_filter_file);
+//        setResult(RESULT_OK, intent);
+//        finish();
+//
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        Log.e("TAGPreview", "onActivityResult: "+requestCode);
         if (requestCode == 270) {
             if (resultCode == RESULT_OK) {
-
+                Log.e("TAGPreview", "onActivityResult@: "+requestCode);
                 Intent intent = new Intent();
                 intent.putExtra("video_path", data.getStringExtra("video_path"));
                 setResult(RESULT_OK, intent);

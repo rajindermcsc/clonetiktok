@@ -15,7 +15,7 @@ import io.branch.referral.Branch;
 
 public class FourChamp extends Application {
 
-    public static final String VIDEO_BASE_URL = "https://websoftquality.com/uploads/videos/";
+    public static final String VIDEO_BASE_URL = "http://tingsic.com/uploads/videos/";
 
     private static boolean isParentResumed = false;
 

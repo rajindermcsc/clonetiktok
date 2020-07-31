@@ -5,18 +5,18 @@ import com.google.gson.annotations.SerializedName;
 
 public class DoFollowResponse {
 
-    @SerializedName("message")
+    @SerializedName("message_id")
     @Expose
-    private String message;
+    private Integer message;
     @SerializedName("success")
     @Expose
     private Integer success;
 
-    public String getMessage() {
+    public Integer getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
+    public void setMessage(Integer message) {
         this.message = message;
     }
 

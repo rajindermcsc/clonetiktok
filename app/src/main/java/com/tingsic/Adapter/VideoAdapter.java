@@ -22,13 +22,13 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
-import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -65,6 +65,7 @@ import com.google.android.exoplayer2.util.Util;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+import com.tingsic.activity.VideoRecorderActivity;
 import com.wang.avi.AVLoadingIndicatorView;
 import com.tingsic.API.ApiClient;
 import com.tingsic.API.ApiInterface;
@@ -112,12 +113,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.app.Activity.RESULT_OK;
+
 public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements LikeButton.OnLikeEventListener,
         CommentBSFragment.OnCommentAddListener,
         CommentAdapter.OnCommentRemoveListener {
 
-    private static final String VIDEO_BASE_URL = "https://websoftquality.com/uploads/videos/";
-    private static final String PROFIL_URL = "https://websoftquality.com/uploads/profile_pic/";
+    private static final String VIDEO_BASE_URL = "http://tingsic.com/uploads/videos/";
+    private static final String PROFIL_URL = "http://tingsic.com/uploads/profile_pic/";
     private static final int AD_DISPLAY_FREQUENCY = 10;
     private static final int POST_TYPE = 0;
     public static final int AD_TYPE = 1;
@@ -133,6 +136,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private ArrayList<Long> list = new ArrayList<>();
     private ArrayList<DownloadM> mlist = new ArrayList<>();
     private String filename;
+    private static int CAMERA = 101;
 
     public List<Video> getData() {
         return videos;
@@ -219,12 +223,12 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         final SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
 
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context,
-                Util.getUserAgent(context, "TikTok"));
+                Util.getUserAgent(context, "Tingsic"));
 
         MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(Uri.parse(VIDEO_BASE_URL + item.getVideoUrl()));
 
-        Log.d("resp", VIDEO_BASE_URL + item.getVideoUrl());
+        Log.e("resp", VIDEO_BASE_URL + item.getVideoUrl());
 
 
         player.prepare(videoSource);
@@ -363,6 +367,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             myViewHolder.tvComment.setText(PreciseCount.from(videos.get(i).getTotalComment()));
             myViewHolder.tvShare.setText(PreciseCount.from(videos.get(i).getTotalShare()));
             myViewHolder.tvVideUsername.setText(context.getString(R.string.user_name, videos.get(i).getUsername()));
+            myViewHolder.tv_video_hashtag.setText(videos.get(i).getHashtag());
             myViewHolder.tvVideoContestName.setText(videos.get(i).getContestTitle());
 
 //            myViewHolder.player.setUp(VIDEO_BASE_URL + videos.get(i).getVideoUrl(), videos.get(i).getVid(), JzvdStd.SCREEN_WINDOW_LIST);
@@ -641,7 +646,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     @Override
                     public void onProgress(double progress) {
 
-                        Log.d("resp", "" + (int) (progress * 100));
+                        Log.e("resp", "" + (int) (progress * 100));
                         // Functions.Show_loading_progress((int)((progress*100)/2)+50);
 
                     }
@@ -658,13 +663,13 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                     @Override
                     public void onCanceled() {
-                        Log.d("resp", "onCanceled");
+                        Log.e("resp", "onCanceled");
                     }
 
                     @Override
                     public void onFailed(Exception exception) {
 
-                        Log.d("resp", exception.toString());
+                        Log.e("resp", exception.toString());
 
                         try {
 
@@ -717,6 +722,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             int likeCount = androidLikeButton.getCount();
             likeCount = likeCount + 1;
             androidLikeButton.setCount(likeCount);
+            Log.e(TAG, "onLikeClicked: "+androidLikeButton.getPositon());
             addLikeAPI(androidLikeButton.getPositon());
         } else {
             androidLikeButton.performClick();
@@ -764,7 +770,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         RenderScript rs = RenderScript.create(context);
         private PlayerView player;
         //private CheckBox tvLike;
-        private TextView tvComment, tvShare, tvDownload, tvVideUsername, tvVideoContestName;
+        private TextView tvComment,btnadd, tvShare, tvDownload, tvVideUsername, tvVideoContestName,tv_video_hashtag;
         private SocialTextView tvVideoDescription;
         private ImageView ivUser, ivWin;
         private LikeButton likeButton;
@@ -787,16 +793,28 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             tvVideUsername = itemView.findViewById(R.id.tv_video_username);
             imgIsVarified = itemView.findViewById(R.id.imgIsVarified);
             tvVideoContestName = itemView.findViewById(R.id.tv_video_contest_name);
+            tv_video_hashtag = itemView.findViewById(R.id.tv_video_hashtag);
 
+            btnadd = itemView.findViewById(R.id.btnadd);
             ivUser = itemView.findViewById(R.id.iv_video_user);
             ivWin = itemView.findViewById(R.id.iv_win);
 
             likeButton = itemView.findViewById(R.id.likeButton);
             tvVideoDescription = itemView.findViewById(R.id.tv_video_description);
+            tvShare.setVisibility(View.GONE);
 
             tvComment.setOnClickListener(this);
             tvShare.setOnClickListener(this);
             ivUser.setOnClickListener(this);
+            btnadd.setOnClickListener(this);
+            if (isUserLoggedIn()){
+                Log.e("TAG", "onCreateView: ");
+                btnadd.setVisibility(View.VISIBLE);
+            }
+            else {
+                Log.e("TAG", "onCreateView@: ");
+                btnadd.setVisibility(View.GONE);
+            }
 
         }
 
@@ -822,9 +840,23 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 case R.id.iv_video_user:
                     handleUserProfile(index);
                     break;
+                case R.id.btnadd:
+                    ((Activity)context).startActivityForResult(new Intent(context, VideoRecorderActivity.class), CAMERA);
+                    ((Activity)context).overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top);
+                    break;
 
             }
         }
+
+//        @Override
+//        public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//
+//            super.onActivityResult(requestCode, resultCode, data);
+//
+//            if (resultCode == RESULT_OK && requestCode == CAMERA) {
+//
+//            }
+//        }
 
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -885,6 +917,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         AdIconView ivAdIcon;
         TextView tvAdTitle;
         TextView tvAdBody;
+        TextView btnadd;
         TextView tvAdSocialContext;
         TextView tvAdSponsoredLabel;
         Button btnAdCallToAction;
@@ -893,14 +926,15 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         AdHolder(View view) {
             super(view);
 
-            mvAdMedia = (MediaView) view.findViewById(R.id.native_ad_media);
-            tvAdTitle = (TextView) view.findViewById(R.id.native_ad_title);
-            tvAdBody = (TextView) view.findViewById(R.id.native_ad_body);
-            tvAdSocialContext = (TextView) view.findViewById(R.id.native_ad_social_context);
-            tvAdSponsoredLabel = (TextView) view.findViewById(R.id.native_ad_sponsored_label);
-            btnAdCallToAction = (Button) view.findViewById(R.id.native_ad_call_to_action);
-            ivAdIcon = (AdIconView) view.findViewById(R.id.native_ad_icon);
-            adChoicesContainer = (LinearLayout) view.findViewById(R.id.ad_choices_container);
+            mvAdMedia = view.findViewById(R.id.native_ad_media);
+            tvAdTitle = view.findViewById(R.id.native_ad_title);
+            tvAdBody = view.findViewById(R.id.native_ad_body);
+
+            tvAdSocialContext = view.findViewById(R.id.native_ad_social_context);
+            tvAdSponsoredLabel = view.findViewById(R.id.native_ad_sponsored_label);
+            btnAdCallToAction = view.findViewById(R.id.native_ad_call_to_action);
+            ivAdIcon = view.findViewById(R.id.native_ad_icon);
+            adChoicesContainer = view.findViewById(R.id.ad_choices_container);
 
         }
     }
@@ -957,10 +991,10 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         int id = PreferenceManager.getDefaultSharedPreferences(context).getInt("id", -111);
         String token = PreferenceManager.getDefaultSharedPreferences(context).getString("token", "null");
 
-        if (id == -111 || token.equals("null")) {
-            showLogInFragment();
-            return;
-        }
+//        if (id == -111 || token.equals("null")) {
+//            showLogInFragment();
+//            return;
+//        }
 
         auth.setToken(token);
         auth.setId(id);
@@ -977,6 +1011,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         likeRequest.setAuth(auth);
         likeRequest.setRequest(request);
         likeRequest.setService("SaveLikes");
+        Log.e(TAG, "addLikeAPI: ");
 
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<LikenShareResponse> responseCall = apiInterface.addLike(likeRequest);
@@ -1028,7 +1063,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         responseCall.enqueue(new Callback<LikenShareResponse>() {
             @Override
             public void onResponse(Call<LikenShareResponse> call, Response<LikenShareResponse> response) {
-                Log.i("VideoAdapter", "onResponse: " + response.code());
+                Log.e("VideoAdapter", "onResponse: " + response.code());
                 if (response.isSuccessful()) {
                     if (response.body().getSuccess() == 1) {
                         int share = Integer.parseInt(videos.get(pos).getTotalShare());
@@ -1047,14 +1082,17 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     private void initBranch(final int position) {
+        Log.e(TAG, "initBranch: "+position);
 
         //todo change desktop url
 
         Video video = videos.get(position);
 
         String vUrl = video.getVideoUrl();
+        Log.e(TAG, "initBranch: "+vUrl);
         video.setVideoUrl(vUrl);
         String url = video.getThumbUrl();
+        Log.e(TAG, "initBranch: "+vUrl);
         video.setThumbUrl(url);
 
         Gson gson = new Gson();
@@ -1062,12 +1100,12 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         String title = video.getContestTitle();
 
-        Log.i("ShareJson", "Json Object: " + json);
+        Log.e("ShareJson", "Json Object: " + json);
         BranchUniversalObject buo = new BranchUniversalObject()
                 .setCanonicalIdentifier("content/12345")
                 .setTitle("Tingsic")
                 .setContentImageUrl(url)
-                .setContentDescription("Check out this new video")
+                .setContentDescription("Watch this amazing video on Tingsic App")
                 .setContentIndexingMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
                 .setLocalIndexMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
                 .setContentMetadata(new ContentMetadata().addCustomMetadata("data", json));
@@ -1076,7 +1114,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 .setFeature("sharing")
                 .setCampaign(title)
                 .setStage("Tingsic user")
-                .addControlParameter("$desktop_url", "https://websoftquality.com/playstore.php")
+                .addControlParameter("$desktop_url", "http://tingsic.com")
                 .addControlParameter("custom", "data")
                 .addControlParameter("custom_random", Long.toString(Calendar.getInstance().getTimeInMillis()));
 
@@ -1111,13 +1149,13 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             @Override
             public void onLinkShareResponse(String sharedLink, String sharedChannel, BranchError error) {
-                Log.i("Branch", "onLinkShareResponse: SharingLink: " + sharedLink);
+                Log.e("Branch", "onLinkShareResponse: SharingLink: " + sharedLink);
             }
 
             @Override
             public void onChannelSelected(String channelName) {
 
-                Log.i("Branch", "onChannelSelected: " + channelName);
+                Log.e("Branch", "onChannelSelected: " + channelName);
                 getShareAPI(position);
 
             }
@@ -1180,7 +1218,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         @Override
         public void onReceive(Context context, Intent intent) {
             long refrenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-            Log.i("INrefrenceId", "" + refrenceId);
+            Log.e("INrefrenceId", "" + refrenceId);
 
 //            if (list.isEmpty()) {
             File file;
@@ -1199,12 +1237,12 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
 
                     String channelid = context.getString(R.string.default_notification_channel_id);
-                    Log.i("Path", "" + path.toString());
+                    Log.e("Path", "" + path.toString());
                     Intent open = new Intent(Intent.ACTION_VIEW);
                     open.setDataAndType(path, "video/*");
                     open.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, open, 0);
-                    Log.i("INSIDE refrenceId", "" + refrenceId);
+                    Log.e("INSIDE refrenceId", "" + refrenceId);
                     Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                     NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelid)
                             .setSmallIcon(R.mipmap.ic_launcher)

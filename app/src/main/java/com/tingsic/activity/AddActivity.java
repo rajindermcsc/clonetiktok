@@ -1,6 +1,7 @@
 package com.tingsic.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -11,14 +12,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetDialog;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+//import androidx.annotation.NonNull;
+//import androidx.annotation.Nullable;
+//import android.support.design.widget.BottomSheetDialog;
+//import androidx.core.app.ActivityCompat;
+//import androidx.core.content.ContextCompat;
+//import androidx.appcompat.app.AlertDialog;
+//import androidx.appcompat.app.AppCompatActivity;
+//import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -26,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,13 +35,26 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.ads.AdView;
+//import com.facebook.ads.AdView;
+//import com.facebook.ads.InterstitialAd;
+//import com.facebook.ads.RewardedVideoAd;
+//import com.facebook.ads.RewardedVideoAdListener;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.reward.RewardItem;
 import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.google.android.gms.ads.reward.RewardedVideoAdListener;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.razorpay.Checkout;
 import com.squareup.picasso.MemoryPolicy;
@@ -86,7 +101,7 @@ public class AddActivity extends AppCompatActivity implements UploadListener, Im
     private ProgressBar progressBar, iprogressBar;
     private Button btnUpload, btnProccedPayment;
     private TextView tvProgress, itvProgress;
-    private SocialEditText etHashtag;
+    private EditText etHashtag;
     private String videoPath, imagePath;
     private MenuItem menuClear;
 
@@ -97,12 +112,31 @@ public class AddActivity extends AppCompatActivity implements UploadListener, Im
     RewardedVideoAd rewardedVideoAd;
     private com.facebook.ads.RewardedVideoAd fbrewardedVideoAd;
 
+    @Override
+    protected void onResume() {
+        super.onResume();
 
+//        if (isUserLoggedIn()) {
+//            //change 30may
+//            showUploadChooser();
+//
+//
+//        }
+//        else {
+//            showLogInFragment();
+//        }
+
+    }
+
+    @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
 
+        Intent intent = new Intent(AddActivity.this, VideoRecorderActivity.class);
+        startActivityForResult(intent, 250);
+        overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top);
         Toolbar toolbar = findViewById(R.id.toolbar_add);
         setSupportActionBar(toolbar);
 
@@ -157,6 +191,7 @@ public class AddActivity extends AppCompatActivity implements UploadListener, Im
         }
 
         ivVideoThumnb = findViewById(R.id.iv_upload_video);
+        ivVideoThumnb.setVisibility(View.GONE);
         btnUpload = findViewById(R.id.btn_video_upload);
 
         btnProccedPayment = findViewById(R.id.btn_procced_payment);
@@ -178,14 +213,6 @@ public class AddActivity extends AppCompatActivity implements UploadListener, Im
                 else {
                     showLogInFragment();
                 }*/
-                if (isUserLoggedIn()) {
-                    //change 30may
-                    showUploadChooser();
-
-
-                } else {
-                    showLogInFragment();
-                }
 
 
             }
@@ -257,6 +284,7 @@ public class AddActivity extends AppCompatActivity implements UploadListener, Im
         gallary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.e(TAG, "onClick: ");
                 dialog.dismiss();
                 Intent intent = new Intent();
                 intent.setType("video/*");
@@ -292,6 +320,7 @@ public class AddActivity extends AppCompatActivity implements UploadListener, Im
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == 250) {
 
@@ -705,9 +734,9 @@ public class AddActivity extends AppCompatActivity implements UploadListener, Im
                             if (etHashtag.getText() != null) {
                                 intent.putExtra("description", etHashtag.getText().toString());
                             }
-                            if (!etHashtag.getHashtags().isEmpty()) {
-                                intent.putExtra("hashTag", TextUtils.join(",", etHashtag.getHashtags()));
-                            }
+//                            if (!etHashtag.getHashtags().isEmpty()) {
+//                                intent.putExtra("hashTag", TextUtils.join(",", etHashtag.getHashtags()));
+//                            }
                             startActivityForResult(intent, PAYMENT_REQUEST);
                         } else {
                             String contestId = PreferenceManager.getDefaultSharedPreferences(AddActivity.this).getString("contest_id", "1");
@@ -752,11 +781,11 @@ public class AddActivity extends AppCompatActivity implements UploadListener, Im
         data.setThumbUrl(thumb_url);
         data.setContId(contestId);
         data.setUserId("" + id);
-        if (!etHashtag.getHashtags().isEmpty()) {
-            data.setHashTag(TextUtils.join(",", etHashtag.getHashtags()));
-        } else {
-            data.setHashTag("");
-        }
+//        if (!etHashtag.getHashtags().isEmpty()) {
+//            data.setHashTag(TextUtils.join(",", etHashtag.getHashtags()));
+//        } else {
+//            data.setHashTag("");
+//        }
         if (etHashtag.getText() != null) {
             data.setDescription(etHashtag.getText().toString());
         }

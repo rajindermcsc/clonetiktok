@@ -1,6 +1,6 @@
 package com.tingsic.Adapter;
 
-import android.databinding.DataBindingUtil;
+
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -9,8 +9,9 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,8 +81,8 @@ public class HashTagAdapter extends RecyclerView.Adapter<HashTagAdapter.HashTagV
             String thumb_url = video.getThumbUrl();
             if (thumb_url.isEmpty()) {
                 //Picasso.get().load(R.drawable.ic_video).into(myViewHolder.imageView);
-                binding.ivThumb.setImageDrawable(itemView.getContext().getResources().getDrawable(R.drawable.ic_video));
-                binding.ivThumb.setBackgroundColor(Color.parseColor("#39476C"));
+                binding.ivthumb.setImageDrawable(itemView.getContext().getResources().getDrawable(R.drawable.ic_video));
+                binding.ivthumb.setBackgroundColor(Color.parseColor("#39476C"));
             } else {
                 Log.i("Thumb", "onBindViewHolder: " + VIDEO_BASE_URL + thumb_url);
                 Picasso.get().load(VIDEO_BASE_URL + thumb_url).placeholder(R.drawable.post_placeholder).into(this);
@@ -105,7 +106,7 @@ public class HashTagAdapter extends RecyclerView.Adapter<HashTagAdapter.HashTagV
 
             Bitmap result = Bitmap.createScaledBitmap(bitmap, targetWidth, targetHeight, false);
 
-            binding.ivThumb.setImageBitmap(result);
+            binding.ivthumb.setImageBitmap(result);
 
             Bitmap bitmapOriginal = Bitmap.createScaledBitmap(result, 50, 100, false);//bitmap.copy(bitmap.getConfig(),false);
             //.getDrawingCache().copy(bitmap.getConfig(), false);
@@ -123,7 +124,7 @@ public class HashTagAdapter extends RecyclerView.Adapter<HashTagAdapter.HashTagV
             //bitmapOriginal = bitmapUtils.getRoundedBitmap(bitmapOriginal,10,0);
 
             Drawable drawable = new BitmapDrawable(itemView.getContext().getResources(), bitmapOriginal);
-            binding.ivThumb.setBackground(drawable);
+            binding.ivthumb.setBackground(drawable);
         }
 
         @Override

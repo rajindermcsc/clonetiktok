@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.hardware.Camera;
 import android.media.MediaMetadataRetriever;
@@ -13,8 +14,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,6 +33,7 @@ import com.googlecode.mp4parser.authoring.Track;
 import com.googlecode.mp4parser.authoring.builder.DefaultMp4Builder;
 import com.googlecode.mp4parser.authoring.container.mp4.MovieCreator;
 import com.googlecode.mp4parser.authoring.tracks.AppendTrack;
+import com.tingsic.Utils.PathFromUri;
 import com.wonderkiln.camerakit.CameraKit;
 import com.wonderkiln.camerakit.CameraKitError;
 import com.wonderkiln.camerakit.CameraKitEvent;
@@ -72,7 +76,7 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
 
     LinearLayout camera_options;
 
-    ImageButton rotate_camera;
+    ImageButton rotate_camera,pick_gallery;
 
     public static int Sounds_list_Request_code = 1;
     TextView add_sound_txt;
@@ -80,6 +84,9 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
 
 
     int sec_passed = 0;
+    private static final int SELECT_VIDEO = 300;
+    private static final int VIDEO_CAPTURE = 400;
+    String videoPath,imagePath;
 
 
     @Override
@@ -87,9 +94,11 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         Hide_navigation();
         setContentView(R.layout.activity_video_recoder);
+        Log.e("TAG", "onCreate: "+Variables.root);
 
         initView();
     }
+
     private Camera.Size getOptimalPreviewSize(List<Camera.Size> sizes, int w, int h) {
         final double ASPECT_TOLERANCE = 0.1;
         double targetRatio=(double)h / w;
@@ -160,7 +169,9 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
 
 
         rotate_camera = findViewById(R.id.rotate_camera);
+        pick_gallery = findViewById(R.id.pick_gallery);
         rotate_camera.setOnClickListener(this);
+        pick_gallery.setOnClickListener(this);
         flash_btn = findViewById(R.id.flash_camera);
         flash_btn.setOnClickListener(this);
 
@@ -172,6 +183,17 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
 
         // this is code hold to record the video
         final Timer[] timer = {new Timer()};
+        pick_gallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("video/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select a Video "), SELECT_VIDEO);
+            }
+        });
+
+
         record_image.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -231,6 +253,8 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
     }
 
 
+
+
     // if the Recording is stop then it we start the recording
     // and if the mobile is recording the video then it will stop the recording
     public void Start_or_Stop_Recording() {
@@ -243,6 +267,7 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
             File file = new File(Variables.root + "/" + "myvideo" + (number) + ".mp4");
             videopaths.add(Variables.root + "/" + "myvideo" + (number) + ".mp4");
             cameraView.captureVideo(file);
+            
 
 
             if (audio != null) {
@@ -293,6 +318,7 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
 
     // this will apped all the videos parts in one  fullvideo
     private boolean append() {
+        Log.e("TAG", "append: "+videopaths.toString());
         final ProgressDialog progressDialog = new ProgressDialog(VideoRecorderActivity.this);
         new Thread(new Runnable() {
             @Override
@@ -308,6 +334,7 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
                 });
 
                 ArrayList<String> video_list = new ArrayList<>();
+
                 for (int i = 0; i < videopaths.size(); i++) {
 
                     File file = new File(videopaths.get(i));
@@ -330,7 +357,7 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
                     Movie[] inMovies = new Movie[video_list.size()];
 
                     for (int i = 0; i < video_list.size(); i++) {
-
+                        Log.e("resp", videopaths.get(0));
                         inMovies[i] = MovieCreator.build(video_list.get(i));
                     }
 
@@ -374,7 +401,7 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
                             if (audio != null)
                                 Merge_withAudio();
                             else {
-                                Go_To_preview_Activity();
+                                Go_To_preview_Activity("captured", videoPath);
                             }
 
                         }
@@ -383,12 +410,189 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
 
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Log.e("TAG", "runex: "+e.getMessage());
                 }
             }
         }).start();
 
 
         return true;
+    }
+
+    private boolean append_() {
+
+        Log.e("TAG", "append: "+videopaths.toString());
+        final ProgressDialog progressDialog = new ProgressDialog(VideoRecorderActivity.this);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+
+                runOnUiThread(new Runnable() {
+                    public void run() {
+
+                        progressDialog.setMessage("Please wait..");
+                        progressDialog.show();
+                    }
+                });
+
+                ArrayList<String> video_list = new ArrayList<>();
+
+                for (int i = 0; i < videopaths.size(); i++) {
+
+                    File file = new File(videopaths.get(i));
+
+                    MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                    retriever.setDataSource(VideoRecorderActivity.this, Uri.fromFile(file));
+                    String hasVideo = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_VIDEO);
+                    boolean isVideo = "yes".equals(hasVideo);
+
+                    if (isVideo && file.length() > 3000) {
+                        Log.d("resp", videopaths.get(i));
+                        video_list.add(videopaths.get(i));
+                    }
+
+                }
+
+
+                try {
+
+                    Movie[] inMovies = new Movie[video_list.size()];
+
+                    for (int i = 0; i < video_list.size(); i++) {
+                        Log.e("resp", videopaths.get(0));
+                        inMovies[i] = MovieCreator.build(video_list.get(i));
+                    }
+
+
+                    List<Track> videoTracks = new LinkedList<Track>();
+                    List<Track> audioTracks = new LinkedList<Track>();
+                    for (Movie m : inMovies) {
+                        for (Track t : m.getTracks()) {
+                            if (t.getHandler().equals("soun")) {
+                                audioTracks.add(t);
+                            }
+                            if (t.getHandler().equals("vide")) {
+                                videoTracks.add(t);
+                            }
+                        }
+                    }
+                    Movie result = new Movie();
+                    if (audioTracks.size() > 0) {
+                        result.addTrack(new AppendTrack(audioTracks.toArray(new Track[audioTracks.size()])));
+                    }
+                    if (videoTracks.size() > 0) {
+                        result.addTrack(new AppendTrack(videoTracks.toArray(new Track[videoTracks.size()])));
+                    }
+
+
+                    Container out = new DefaultMp4Builder().build(result);
+                    String outputFilePath = null;
+                    if (audio != null) {
+                        outputFilePath = Variables.outputfile;
+                    } else {
+                        outputFilePath = Variables.outputfile2;
+                    }
+                    FileOutputStream fos = new FileOutputStream(new File(outputFilePath));
+                    out.writeContainer(fos.getChannel());
+                    fos.close();
+
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            progressDialog.dismiss();
+
+                            if (audio != null)
+                                Merge_withAudio();
+                            else {
+                                Go_To_preview_Activity("captured", videoPath);
+                            }
+
+                        }
+                    });
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("TAG", "runex: "+e.getMessage());
+                }
+            }
+        }).start();
+
+
+        return true;
+//        Log.e("TAG", "append: "+videopaths.toString());
+//        final ProgressDialog progressDialog = new ProgressDialog(VideoRecorderActivity.this);
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//
+//                runOnUiThread(new Runnable() {
+//                    public void run() {
+//
+//                        progressDialog.setMessage("Please wait..");
+//                        progressDialog.show();
+//                    }
+//                });
+//
+//                ArrayList<String> video_list = new ArrayList<>();
+//
+//
+//                File file = new File(videopaths.get(0));
+//
+//                    if (file.length() > 3000) {
+//                        Log.e("resp", videopaths.get(0));
+//                        video_list.add(videopaths.get(0));
+//                    }
+//
+//
+//
+//                try {
+//
+//                    Movie[] inMovies = new Movie[video_list.size()];
+//
+//                    inMovies[0] = MovieCreator.build(video_list.get(0));
+//
+//
+//
+//                    Movie result = new Movie();
+//
+//
+//
+//                    Container out = new DefaultMp4Builder().build(result);
+//                    String outputFilePath = null;
+//                    if (audio != null) {
+//                        outputFilePath = Variables.outputfile;
+//                    } else {
+//                        outputFilePath = Variables.outputfile2;
+//                    }
+//                    FileOutputStream fos = new FileOutputStream(new File(outputFilePath));
+//                    out.writeContainer(fos.getChannel());
+//                    fos.close();
+//
+//                    runOnUiThread(new Runnable() {
+//                        public void run() {
+//                            progressDialog.dismiss();
+//
+//                            if (audio != null)
+//                                Merge_withAudio();
+//                            else {
+//                                Go_To_preview_Activity();
+//                            }
+//
+//                        }
+//                    });
+//
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    Log.e("TAG", "runexx: "+e.getMessage());
+//                }
+//            }
+//        }).start();
+//
+//
+//        return true;
     }
 
 
@@ -412,6 +616,7 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
     }
 
 
+    @SuppressLint("WrongConstant")
     @Override
     public void onClick(View v) {
 
@@ -468,6 +673,7 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.e("TAGVideo", "onActivityResult: "+requestCode);
         if (requestCode == Sounds_list_Request_code) {
             if (data != null) {
 
@@ -482,12 +688,146 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
         }
         if (requestCode == 260) {
             if (resultCode == RESULT_OK) {
-
+                Log.e("TAGVideo", "onActivityResult@: "+requestCode);
                 Intent intent = new Intent();
                 intent.putExtra("video_path", data.getStringExtra("video_path"));
                 setResult(RESULT_OK, intent);
                 finish();
+            }
+        }
+        if (requestCode == SELECT_VIDEO) {
+            Uri videoUri = data.getData();
+            videoPath = PathFromUri.getRealPath(this, videoUri);
+            Go_To_preview_Activity("selected",videoPath);
+//            videopaths=new ArrayList<>();
+//            videopaths.add((videoPath));
+//            append_();
+//            Log.i("TAG", "onActivityResult: Videouri: " + videoUri.toString());
+//            Log.e("TAG", "onActivityResult: code req res " + requestCode + resultCode);
+//            Log.i("TAG", "onActivityResult: " + videoPath);
+//
+//            Log.i("TAG", "onActivityResult: Size " + getFileSize(videoUri) + " Bytes");
+//
+//                /*if (Build.VERSION.SDK_INT <= 26) {
+//                    this.videoPath = getPath(videoUri);
+//                    Log.i(TAG, "onActivityResult: VideoPath"+videoPath);
+//                }
+//                else {
+//                    File file = new File(videoUri.getPath());//create path from uri
+//                    this.videoPath = file.getAbsolutePath();
+//                    Log.i(TAG, "onActivityResult: VideoPath"+videoPath);
+//                }*/
+//
+//
+//            File thumbfile = new File(getExternalFilesDir(null), "temp.jpeg");
+//            try {
+//                FileOutputStream stream = new FileOutputStream(thumbfile);
+//                Bitmap bitmap = PathFromUri.createVideoThumbnail(this, videoUri);
+//                if (bitmap != null) {
+//                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+//
+//                    imagePath = thumbfile.getPath();
+//                }
+//                Log.e("TAG", "onActivityResult: Image Path " + imagePath);
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            }
 
+//            if (this.imagePath == null || this.imagePath.isEmpty()) {
+//                this.imagePath = getThumbnailPathForLocalFile(videoUri);
+//            }
+//
+//            Log.e("TAG", "onActivityResult: thumbPsth: " + imagePath);
+//
+//            ivVideoThumnb.setVisibility(View.VISIBLE);
+//            ivVideoThumnb.setClickable(false);
+//            if (menuClear != null) {
+//                menuClear.setVisible(true);
+//            }
+//
+//            Picasso.get().load("file://" + imagePath).memoryPolicy(MemoryPolicy.NO_CACHE).into(ivVideoThumnb);
+//
+//                /*MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+//                //use one of overloaded setDataSource() functions to set your data source
+//                retriever.setDataSource(this, videoUri);
+//                String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+//                String vw = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
+//                String vh = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
+//                String r = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
+//                int width = (int) (Double.parseDouble(vw)/2);
+//                int height = (int) (Double.parseDouble(vh)/2);
+//                int rotation = (int) (Double.parseDouble(r));
+//                if (rotation==0||rotation==180) {
+//
+//                }
+//                Log.i(TAG, "onActivityResult: "+width+" "+height+ " rotation"+rotation);
+//                long timeInMillisec = Long.parseLong(time );
+//
+//                retriever.release();*/
+//
+//            btnUpload.setVisibility(View.VISIBLE);
+//            etHashtag.setVisibility(View.VISIBLE);
+//
+//            //fixme if you want to compress
+//            long size = Long.parseLong(getFileSize(videoUri));
+//
+//            if (size > 6000000) {
+//                File file = new File(getExternalFilesDir(null), "temp.mp4");
+//                String currentOutputVideoPath = file.getPath();
+//                //todo uncomment this!
+//                btnUpload.setVisibility(View.VISIBLE);
+//                etHashtag.setVisibility(View.VISIBLE);
+//                //showLargeFileDialog(this.videoPath,currentOutputVideoPath);
+//                if (size > 15000000) {
+//                    showLargeFileDialog(this.videoPath, currentOutputVideoPath, false);
+//                } else {
+//                    showLargeFileDialog(this.videoPath, currentOutputVideoPath, true);
+//                }
+//            } else {
+//                btnUpload.setVisibility(View.VISIBLE);
+//                etHashtag.setVisibility(View.VISIBLE);
+//            }
+
+                /*File file = new File(getExternalFilesDir(null),"temp.mp4");
+                String currentOutputVideoPath = file.getPath();
+                btnUpload.setVisibility(View.VISIBLE);
+                etHashtag.setVisibility(View.VISIBLE);
+                compress(videoPath,currentOutputVideoPath);
+                //showLargeFileDialog(this.videoPath,currentOutputVideoPath);*/
+
+                /*Button btnCompress = findViewById(R.id.btn_video_compress);
+                btnCompress.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        //String cmd = "-y -i " + currentInputVideoPath + " -preset ultrafast -b 600k " + currentOutputVideoPath; almost 4 min
+                        //String cmd = "-y -i " + currentInputVideoPath + " -c:v libx264 -crf 40 -preset ultrafast " + currentOutputVideoPath;
+
+                        //execCommand(currentOutputVideoPath,cmd);
+
+                        //compress(videoPath,currentOutputVideoPath);
+                    }
+                });*/
+        }
+    }
+
+
+    private String getFileSize(Uri videoUri) {
+        Cursor cursor = null;
+
+        try {
+            String[] column = {MediaStore.Video.Media.SIZE};
+
+            cursor = getContentResolver().query(videoUri, column, null, null, null);
+
+            assert cursor != null;
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE);
+
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
             }
         }
     }
@@ -563,12 +903,26 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
     }
 
 
-    public void Go_To_preview_Activity() {
-        Intent intent = new Intent(this, PreviewVideoActivity.class);
-        //intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-        //startActivity(intent);
-        startActivityForResult(intent, 260);
-        overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+    public void Go_To_preview_Activity(String captured, String videoPath) {
+        Log.e("TAG", "Go_To_preview_Activity: "+videoPath);
+
+        if (captured.equalsIgnoreCase("captured")) {
+            Intent intent = new Intent(this, PreviewVideoActivity.class);
+            intent.putExtra("type","captured");
+            //intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+            //startActivity(intent);
+            startActivityForResult(intent, 260);
+            overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+        }
+        else {
+            Intent intent = new Intent(this, PreviewVideoActivity.class);
+            intent.putExtra("video_path", this.videoPath);
+            intent.putExtra("type","selected");
+            //intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+            //startActivity(intent);
+            startActivityForResult(intent, 260);
+            overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+        }
     }
 
 

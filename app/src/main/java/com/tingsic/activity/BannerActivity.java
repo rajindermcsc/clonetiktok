@@ -5,11 +5,13 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.tabs.TabLayout;
+//import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.tingsic.API.ApiClient;
@@ -58,7 +61,36 @@ public class BannerActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_banner);
+        FirebaseApp.initializeApp(this);
 
+        String token = NotificationService.getToken(this);
+        Log.e(TAG, "onCreate: "+token);
+        if (token.equals("null")) {
+            FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                @Override
+                public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                    if (task.isSuccessful()) {
+                        if (task.getResult() != null) {
+                            NotificationService.saveToken(BannerActivity.this,task.getResult().getToken());
+                        }
+                    }
+                }
+            });
+
+            token = NotificationService.getToken(this);
+        }
+        new Handler().postDelayed(new Runnable() {
+
+
+            @Override
+            public void run() {
+                // This method will be executed once the timer is over
+                Intent i = new Intent(BannerActivity.this, MainActivity.class);
+                startActivity(i);
+                finish();
+            }
+        }, 3000);
+    }
 
         /*String userToken = NotificationService.getToken(this);
         if (userToken.equals("null")) {
@@ -85,7 +117,6 @@ public class BannerActivity extends AppCompatActivity {
             }
         });*/
 
-    }
 
     private void initView() {
         ViewPager viewPager = findViewById(R.id.vp_banner);

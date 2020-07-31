@@ -77,6 +77,7 @@ public interface ApiInterface {
     /*
      * Get SignUP API
      * */
+
     @Headers({
             "Accept: application/json",
             "Content-Type: application/json"
@@ -251,7 +252,7 @@ public interface ApiInterface {
             "Accept: application/json",
             "Content-Type: application/json"
     })
-    @POST("WebService/service")
+    @POST("WebService/")
     Call<LikenShareResponse> addLike(@Body AddLikeRequest request);
 
     /*

@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.xitij.tingsic.activity.PreviewVideoActivity">
+    android:layout_height="match_parent">
 
 
     <com.tingsic.View.MovieWrapperView
@@ -42,7 +41,7 @@
         android:textSize="15sp"
         android:textStyle="bold" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recylerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

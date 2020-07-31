@@ -4,17 +4,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:keepScreenOn="true"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.xitij.tingsic.activity.PostVideoActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ProgressBar
+        android:visibility="gone"
+        android:id="@+id/progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </ProgressBar>
 
 
 
     <RelativeLayout
+        android:id="@+id/linlay_video_upload"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -45,7 +53,20 @@
                     android:layout_height="24dp"
                     android:src="@drawable/ic_back"
                     android:tint="@color/black"
-                    android:id="@+id/Goback"
+                    android:id="@+id/goback"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:scaleType="fitCenter"
+                    android:background="@color/transparent"/>
+
+                <ImageButton
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_close"
+                    android:tint="@color/black"
+                    android:id="@+id/close"
+                    android:visibility="gone"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="15dp"
@@ -53,9 +74,39 @@
                     android:background="@color/transparent"/>
 
             </RelativeLayout>
-        </android.support.v7.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
+
 
         <LinearLayout
+
+            android:layout_below="@+id/toolbar"
+            android:id="@+id/linlay_upload_done"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_done" />
+
+            <Button
+                android:id="@+id/btn_upload_another"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/btn_round"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="Upload another"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_post"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/toolbar"
@@ -64,10 +115,24 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="230dp"
+                android:layout_height="150dp"
                 android:scaleType="fitCenter"
                 android:layout_marginTop="10dp"
                 android:id="@+id/video_thumbnail"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:hint="Enter Description"
+                android:id="@+id/et_desc"/>
+
+            <com.tingsic.View.SocialView.SocialEditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:hint="Enter Hastag"
+                android:id="@+id/et_hastag"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"

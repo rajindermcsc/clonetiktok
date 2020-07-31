@@ -17,7 +17,9 @@ import com.googlecode.mp4parser.authoring.container.mp4.MovieCreator;
 import com.googlecode.mp4parser.authoring.tracks.AACTrackImpl;
 import com.googlecode.mp4parser.authoring.tracks.CroppedTrack;
 import com.googlecode.mp4parser.authoring.tracks.MP3TrackImpl;
+import com.tingsic.R;
 import com.tingsic.Utils.Variables;
+import com.tingsic.activity.PostVideoActivity;
 import com.tingsic.activity.PreviewVideoActivity;
 
 import java.io.File;
@@ -36,9 +38,25 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
 
     private String audio, video, output;
     private int type = 0;
+    String srcMp4Path, destMp4Path;
 
     public MergeVideoAudio(Context context) {
         this.context = context;
+        progressDialog = new ProgressDialog(context);
+        if (type == 1) {
+
+            progressDialog.setMessage("Please Wait...");
+        } else {
+            progressDialog.setMessage("Please wait filter is apply...");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+    }
+
+    public MergeVideoAudio(Context context, String srcMp4Path, String destMp4Path) {
+        this.context = context;
+        this.srcMp4Path = srcMp4Path;
+        this.destMp4Path = destMp4Path;
         progressDialog = new ProgressDialog(context);
         if (type == 1) {
 
@@ -85,6 +103,7 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
 
     public void Go_To_preview_Activity() {
         Intent intent = new Intent(context, PreviewVideoActivity.class);
+        intent.putExtra("type","captured");
         intent.putExtra("path", Variables.root + "/output2.mp4");
         ((Activity) context).startActivityForResult(intent, 260);
         //context.startActivity(intent);
@@ -204,18 +223,23 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
     };
 
     public void GotopostScreen() {
-
-        /*Intent intent =new Intent(PreviewVideoActivity.this,PostVideoActivity.class);
-        //intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-        //startActivity(intent);
-        startActivityForResult(intent,270);
-        overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);*/
         if (context instanceof PreviewVideoActivity) {
-            Intent intent = new Intent();
-            intent.putExtra("video_path", Variables.output_filter_file2);
-            ((PreviewVideoActivity) context).setResult(RESULT_OK, intent);
+            Intent intent = new Intent(context, PostVideoActivity.class);
+            //intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+            //startActivity(intent);
+            intent.putExtra("srcMp4Path", srcMp4Path);
+            intent.putExtra("destMp4Path", destMp4Path);
+            ((PreviewVideoActivity) context).startActivityForResult(intent, 270);
+            ((PreviewVideoActivity) context).overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
             ((PreviewVideoActivity) context).finish();
         }
+//        if (context instanceof PreviewVideoActivity) {
+//            Log.e("TAG", "GotopostScreen: ");
+//            Intent intent = new Intent();
+//            intent.putExtra("video_path", Variables.output_filter_file2);
+//            ((PreviewVideoActivity) context).setResult(RESULT_OK, intent);
+//            ((PreviewVideoActivity) context).finish();
+//        }
 
     }
 

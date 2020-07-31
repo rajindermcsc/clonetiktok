@@ -54,6 +54,7 @@
 
     <string name="limit_bio_length" translatable="false">%d line, %d character remaining</string>
     <string name="user_name" translatable="false">\@%s</string>
+    <string name="hash_tag" translatable="false">\#%s</string>
 
     <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
     <string name="change_password">Change Password</string>
@@ -108,16 +109,23 @@
     <string name="request_payment">Request Payment</string>
 
     <string name="admob_app_id">ca-app-pub-3607984402041943~4677702995</string>
-<!--    <string name="admob_banner">ca-app-pub-3607984402041943/4434160417</string>-->
-<!--    <string name="admoob_interestial">ca-app-pub-3607984402041943/5894867152</string>-->
-<!--    <string name="admob_rewarded">ca-app-pub-3607984402041943/5563694667</string>-->
+    <!--    <string name="admob_banner">ca-app-pub-3607984402041943/4434160417</string>-->
+    <!--    <string name="admoob_interestial">ca-app-pub-3607984402041943/5894867152</string>-->
+    <!--    <string name="admob_rewarded">ca-app-pub-3607984402041943/5563694667</string>-->
 
     <string name="admob_banner">ca-app-pub-3940256099942544/6300978111</string>
     <string name="admoob_interestial">ca-app-pub-3940256099942544/1033173712</string>
     <string name="admob_rewarded">ca-app-pub-3940256099942544/5224354917</string>
 
-        <string name="fb_interestial">ca-app-pub-3940256099942544/1033173712</string>
-        <string name="fb_reward">ca-app-pub-3940256099942544/1033173712</string>
-        <string name="hastag">hastag</string>
-
-    </resources>
+    <string name="fb_interestial">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="fb_reward">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="hastag">hastag</string>
+    <string name="hello_blank_fragment">Hello</string>
+    <string name="sign_up_with_mobile">Sign Up With Mobile Number</string>
+    <string name="close">Close</string>
+    <string name="record">record</string>
+    <string name="music">music</string>
+    <string name="flip">flip</string>
+    <string name="flash">flash</string>
+    <string name="add">Add</string>
+</resources>

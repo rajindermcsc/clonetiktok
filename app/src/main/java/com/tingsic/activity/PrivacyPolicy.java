@@ -1,8 +1,8 @@
 package com.tingsic.activity;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.webkit.WebView;
 
@@ -17,7 +17,6 @@ public class PrivacyPolicy extends AppCompatActivity {
         webView.getSettings().setLoadsImagesAutomatically(true);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_INSET);
-        webView.loadUrl("http://tiktukreward.xitijapp.com/terms&conditions.html");
-
+        webView.loadUrl("http://tingsic.com/terms&conditions.html");
     }
 }

@@ -1,6 +1,8 @@
 package com.tingsic.activity;
 
 import android.Manifest;
+import android.app.ActivityGroup;
+import android.app.LocalActivityManager;
 import android.app.TabActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,17 +12,27 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.databinding.adapters.TabHostBindingAdapter;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+//import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.TabHost;
 import android.widget.TabWidget;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.tabs.TabLayout;
 import com.tingsic.FourChamp;
+import com.tingsic.Fragment.LogInBSFragment;
 import com.tingsic.R;
 import com.tingsic.Utils.DisplayHelper;
 
@@ -29,6 +41,7 @@ public class MainActivity extends TabActivity implements TabHost.OnTabChangeList
     private static final String TAG = MainActivity.class.getSimpleName();
     private AnimationDrawable drawable;
     private static final int WRITE_PERMISSION = 372;
+    private static int CAMERA = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +77,8 @@ public class MainActivity extends TabActivity implements TabHost.OnTabChangeList
         TabHost tab = findViewById(android.R.id.tabhost);
         tab.setOnTabChangedListener(this);
         tab.setup();
+//        LocalActivityManager mLocalActivityManager = new LocalActivityManager(this, false);
+//        tab.setup(mLocalActivityManager);
 
         if (DisplayHelper.hasNavBar(this)) {
 
@@ -79,64 +94,134 @@ public class MainActivity extends TabActivity implements TabHost.OnTabChangeList
 
         }
 
-        boolean isShared = getIntent().getBooleanExtra("shared", false);
+        if (isUserLoggedIn()) {
 
-        Intent intent = new Intent(this, HomeActivity.class);
-        intent.putExtra("shared", isShared);
-        intent.putExtra("video", getIntent().getStringExtra("video"));
+            boolean isShared = getIntent().getBooleanExtra("shared", false);
 
-        TabHost.TabSpec specHome = tab.newTabSpec("home");
-        specHome.setIndicator("", getResources().getDrawable(R.drawable.ic_home));
-        specHome.setContent(intent);
+            Intent intent = new Intent(this, HomeActivity.class);
+            intent.putExtra("shared", isShared);
+            intent.putExtra("video", getIntent().getStringExtra("video"));
 
-
-        TabHost.TabSpec specSearch = tab.newTabSpec("search");
-        specSearch.setIndicator("", getResources().getDrawable(R.drawable.ic_search));
-        specSearch.setContent(new Intent(this, SearchActivity.class));
+            TabHost.TabSpec specHome = tab.newTabSpec("home");
+            specHome.setIndicator("", getResources().getDrawable(R.drawable.ic_home));
+            specHome.setContent(intent);
 
 
-        TabHost.TabSpec specAdd = tab.newTabSpec("add");
-        specAdd.setIndicator("", getResources().getDrawable(R.drawable.ic_add));
-        specAdd.setContent(new Intent(this, AddActivity.class));
+            TabHost.TabSpec specSearch = tab.newTabSpec("search");
+            specSearch.setIndicator("", getResources().getDrawable(R.drawable.ic_search));
+            specSearch.setContent(new Intent(this, SearchActivity.class));
 
 
+//            TabHost.TabSpec specAdd = tab.newTabSpec("add");
+//            specAdd.setIndicator("", getResources().getDrawable(R.drawable.ic_add));
+//            specAdd.setContent(intent);
+
+
+            TabHost.TabSpec specNotifications = tab.newTabSpec("notification");
+            specNotifications.setIndicator("", getResources().getDrawable(R.drawable.ic_notifications));
+            specNotifications.setContent(new Intent(this, NotificationActivity.class));
+
+//
 //        TabHost.TabSpec specBadge = tab.newTabSpec("contest");
 //        specBadge.setIndicator("", getResources().getDrawable(R.drawable.ic_badge_white));
 //        specBadge.setContent(new Intent(this, ContestActivity.class));
 
 
-        TabHost.TabSpec specUser = tab.newTabSpec("user");
-        specUser.setIndicator("", getResources().getDrawable(R.drawable.ic_user));
-        specUser.setContent(new Intent(this, ProfileActivity.class));
+            TabHost.TabSpec specUser = tab.newTabSpec("user");
+            specUser.setIndicator("", getResources().getDrawable(R.drawable.ic_user));
+            specUser.setContent(new Intent(this, ProfileActivity.class));
 
-        tab.addTab(specHome);
-        tab.addTab(specSearch);
-        tab.addTab(specAdd);
-//        tab.addTab(specBadge);
-        tab.addTab(specUser);
+            tab.addTab(specHome);
+            tab.addTab(specSearch);
+//            tab.addTab(specAdd);
+            tab.addTab(specNotifications);
+            tab.addTab(specUser);
 
-        tab.getTabWidget().getChildAt(0).setBackground(null);
-        tab.getTabWidget().getChildAt(1).setBackground(null);
-        tab.getTabWidget().getChildAt(2).setBackground(null);
-//        tab.getTabWidget().getChildAt(3).setBackground(null);
-        tab.getTabWidget().getChildAt(3).setBackground(null);
+            tab.getTabWidget().getChildAt(0).setBackground(null);
+            tab.getTabWidget().getChildAt(1).setBackground(null);
+            tab.getTabWidget().getChildAt(2).setBackground(null);
+            tab.getTabWidget().getChildAt(3).setBackground(null);
+//            tab.getTabWidget().getChildAt(4).setBackground(null);
 
-        Log.i(TAG, "initView: strip" + tab.getTabWidget().isStripEnabled());
+            Log.i(TAG, "initView: strip" + tab.getTabWidget().isStripEnabled());
 
 
-        View view = findViewById(R.id.laxman_rekha);
-        drawable = (AnimationDrawable) getResources().getDrawable(R.drawable.loading_bar);
-        view.setBackgroundColor(getResources().getColor(R.color.transparent_white_60));
-        drawable.setEnterFadeDuration(700);
-        drawable.setExitFadeDuration(600);
-        drawable.stop();
+            View view = findViewById(R.id.laxman_rekha);
+            drawable = (AnimationDrawable) getResources().getDrawable(R.drawable.loading_bar);
+            view.setBackgroundColor(getResources().getColor(R.color.transparent_white_60));
+            drawable.setEnterFadeDuration(700);
+            drawable.setExitFadeDuration(600);
+            drawable.stop();
 
-        boolean isProfile = getIntent().getBooleanExtra("isProfile", false);
-        if (isProfile) {
-            String id = getIntent().getStringExtra("id");
-            Intent pIntent = new Intent(this, UserActivity.class);
-            pIntent.putExtra("userId", id);
-            startActivity(pIntent);
+            boolean isProfile = getIntent().getBooleanExtra("isProfile", false);
+            if (isProfile) {
+                String id = getIntent().getStringExtra("id");
+                Intent pIntent = new Intent(this, UserActivity.class);
+                pIntent.putExtra("userId", id);
+                startActivity(pIntent);
+            }
+        }
+        else {
+
+            boolean isShared = getIntent().getBooleanExtra("shared", false);
+
+            Intent intent = new Intent(this, HomeActivity.class);
+            intent.putExtra("shared", isShared);
+            intent.putExtra("video", getIntent().getStringExtra("video"));
+
+            TabHost.TabSpec specHome = tab.newTabSpec("home");
+            specHome.setIndicator("", getResources().getDrawable(R.drawable.ic_home));
+            specHome.setContent(intent);
+
+
+            TabHost.TabSpec specSearch = tab.newTabSpec("search");
+            specSearch.setIndicator("", getResources().getDrawable(R.drawable.ic_search));
+            specSearch.setContent(new Intent(this, SearchActivity.class));
+
+
+
+
+            TabHost.TabSpec specNotifications = tab.newTabSpec("notification");
+            specNotifications.setIndicator("", getResources().getDrawable(R.drawable.ic_notifications));
+            specNotifications.setContent(new Intent(this, NotificationActivity.class));
+
+//
+//        TabHost.TabSpec specBadge = tab.newTabSpec("contest");
+//        specBadge.setIndicator("", getResources().getDrawable(R.drawable.ic_badge_white));
+//        specBadge.setContent(new Intent(this, ContestActivity.class));
+
+
+            TabHost.TabSpec specUser = tab.newTabSpec("user");
+            specUser.setIndicator("", getResources().getDrawable(R.drawable.ic_user));
+            specUser.setContent(new Intent(this, ProfileActivity.class));
+
+            tab.addTab(specHome);
+            tab.addTab(specSearch);
+            tab.addTab(specNotifications);
+            tab.addTab(specUser);
+
+            tab.getTabWidget().getChildAt(0).setBackground(null);
+            tab.getTabWidget().getChildAt(1).setBackground(null);
+            tab.getTabWidget().getChildAt(2).setBackground(null);
+            tab.getTabWidget().getChildAt(3).setBackground(null);
+
+            Log.i(TAG, "initView: strip" + tab.getTabWidget().isStripEnabled());
+
+
+            View view = findViewById(R.id.laxman_rekha);
+            drawable = (AnimationDrawable) getResources().getDrawable(R.drawable.loading_bar);
+            view.setBackgroundColor(getResources().getColor(R.color.transparent_white_60));
+            drawable.setEnterFadeDuration(700);
+            drawable.setExitFadeDuration(600);
+            drawable.stop();
+
+            boolean isProfile = getIntent().getBooleanExtra("isProfile", false);
+            if (isProfile) {
+                String id = getIntent().getStringExtra("id");
+                Intent pIntent = new Intent(this, UserActivity.class);
+                pIntent.putExtra("userId", id);
+                startActivity(pIntent);
+            }
         }
 
     }
@@ -153,6 +238,35 @@ public class MainActivity extends TabActivity implements TabHost.OnTabChangeList
             widget.setBackgroundColor(Color.BLACK);
             view.setVisibility(View.GONE);
         }
+
+        if (tabId.equals("add")){
+            widget.setCurrentTab(0);
+
+            if (isUserLoggedIn()) {
+                //change 30may
+//                startActivityForResult(new Intent(MainActivity.this, VideoRecorderActivity.class), CAMERA);
+
+
+
+            }
+        }
+    }
+
+
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (resultCode == RESULT_OK && requestCode == CAMERA) {
+//            setDefaultTab(2);
+//        }
+//    }
+
+    private boolean isUserLoggedIn() {
+        boolean logIn = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("isLoggedIn", false);
+
+        return logIn;
     }
 
     private BroadcastReceiver tabColorReceiver = new BroadcastReceiver() {

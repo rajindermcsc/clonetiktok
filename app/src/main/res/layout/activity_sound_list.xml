@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
 
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -48,7 +48,7 @@
                     android:textSize="15dp"
                     android:textStyle="bold" />
             </RelativeLayout>
-        </android.support.v7.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
 
 
         <RelativeLayout
@@ -56,7 +56,7 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/toolbar">
 
-            <!--<android.support.design.widget.TabLayout
+            <!--<com.google.android.material.tabs.TabLayout
                 android:id="@+id/groups_tab"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"

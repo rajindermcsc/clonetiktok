@@ -1,19 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.tingsic">
+    package="com.tingsic"
+    tools:ignore="MissingLeanbackLauncher">
 
     <uses-feature
         android:name="android.software.leanback"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.touchscreen"
         android:required="false" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+<!--    <uses-permission android:name="android.permission.RECEIVE_SMS" />-->
+<!--    <uses-permission android:name="android.permission.READ_SMS" />-->
 
     <application
-        android:name="com.tingsic.FourChamp"
+        android:name=".FourChamp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -22,10 +29,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar.FullScreen"
         android:usesCleartextTraffic="true">
-        <activity android:name="com.tingsic.activity.HashTagVideoActivity"></activity>
+<!--        <activity android:name=".activity.CameraActivity"></activity>-->
+        <!-- <activity android:name=".activity.OtpLogin" -->
+        <!-- android:theme="@style/Theme.UserDialog"></activity> -->
+        <activity android:name=".activity.NotificationActivity" />
+        <activity android:name=".activity.HashTagVideoActivity" />
 
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="com.tingsic.provider"
             android:exported="false"
             android:grantUriPermissions="true">
@@ -34,25 +45,25 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name="com.tingsic.activity.MainActivity"></activity>
-        <activity android:name="com.tingsic.activity.ForgetPasswordActivity" />
-        <activity android:name="com.tingsic.activity.SignUpActivity"></activity>
-        <activity android:name="com.tingsic.activity.LogInActivity"></activity>
-        <activity android:name="com.tingsic.activity.HomeActivity" />
-        <activity android:name="com.tingsic.activity.UserActivity" />
-        <activity android:name="com.tingsic.activity.SearchActivity" />
-        <activity android:name="com.tingsic.activity.AddActivity" />
-        <activity android:name="com.tingsic.activity.PrivacyPolicy" />
-        <activity android:name="com.tingsic.activity.ProfileActivity" />
+        <activity android:name=".activity.MainActivity" />
+        <activity android:name=".activity.ForgetPasswordActivity" />
+        <activity android:name=".activity.SignUpActivity" />
+        <activity android:name=".activity.LogInActivity" />
+        <activity android:name=".activity.HomeActivity" />
+        <activity android:name=".activity.UserActivity" />
+        <activity android:name=".activity.SearchActivity" />
+        <activity android:name=".activity.AddActivity" />
+        <activity android:name=".activity.PrivacyPolicy" />
+        <activity android:name=".activity.ProfileActivity" />
         <activity
-            android:name="com.tingsic.activity.UpdateProfileActivity"
+            android:name=".activity.UpdateProfileActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name="com.tingsic.activity.ContestActivity" />
+        <activity android:name=".activity.ContestActivity" />
         <activity
-            android:name="com.tingsic.activity.BannerActivity"
+            android:name=".activity.BannerActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -72,16 +83,16 @@
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
         </activity>
-        <activity android:name="com.tingsic.activity.ChangePasswordActivity" />
+        <activity android:name=".activity.ChangePasswordActivity" />
         <activity
-            android:name="com.tingsic.activity.VideoRecorderActivity"
+            android:name=".activity.VideoRecorderActivity"
             android:theme="@style/WhiteScreenIssueTheme" />
         <activity
-            android:name="com.tingsic.activity.PreviewVideoActivity"
+            android:name=".activity.PreviewVideoActivity"
             android:theme="@style/black_status" />
-        <activity android:name="com.tingsic.activity.PostVideoActivity" />
-        <activity android:name="com.tingsic.activity.SoundListActivity" />
-        <activity android:name="com.tingsic.activity.TestActivity"></activity>
+        <activity android:name=".activity.PostVideoActivity" />
+        <activity android:name=".activity.SoundListActivity" />
+        <activity android:name=".activity.TestActivity" />
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
@@ -103,11 +114,11 @@
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
-        <activity android:name="com.tingsic.activity.LoginWithFacebook" />
-        <activity android:name="com.tingsic.activity.PointsActivity" />
-        <activity android:name="com.tingsic.activity.UserPointsActivity" />
+        <activity android:name=".activity.LoginWithFacebook" />
+        <activity android:name=".activity.PointsActivity" />
+        <activity android:name=".activity.UserPointsActivity" />
 
-        <service android:name="com.tingsic.NotificationService">
+        <service android:name=".NotificationService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -121,7 +132,7 @@
             android:value="@string/admob_app_id" /> <!-- Branch init -->
         <meta-data
             android:name="io.branch.sdk.BranchKey"
-            android:value="key_live_dgKudQrMa6xc2YmEqqT22fljFAkQl5cY" />
+            android:value="key_live_kdIZvscM5qXHVNHfUugt1injAxkqHp2u" />
         <meta-data
             android:name="io.branch.sdk.BranchKey.test"
             android:value="key_test_poOkQo4DncCT7pnKkc0kvlfasspacrNz" /> <!-- Branch testing (TestMode "true" to simulate fresh installs on dev environment) -->
@@ -164,6 +175,10 @@
         </receiver>
 
         <service android:name="com.google.android.gms.analytics.CampaignTrackingService" />
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
     </application>
 
 </manifest>
