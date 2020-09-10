@@ -71,7 +71,7 @@ public class DBHelper
         mDbHelper.close();
     }
     public void insertnotification( String title, String text,String noti_date,int id) {
-        Log.e(TAG, "insertImagedefault: "+text );
+        //Log.e(TAG, "insertImagedefault: "+text );
         ContentValues cv2 = new ContentValues();
         cv2.put(Notification_Title,title);
         cv2.put(Notification_Description,text);

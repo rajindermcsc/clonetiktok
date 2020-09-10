@@ -50,7 +50,7 @@ public class TestActivity extends AppCompatActivity {
         Gson gson = new Gson();
 
         final UploadVideoResponse response = gson.fromJson(data, UploadVideoResponse.class);
-        Log.e(TAG, "onCreate: "+response.getData());
+        //Log.e(TAG, "onCreate: "+response.getData());
 
         ImageView imageView = findViewById(R.id.iv_uploaded_thumb);
         Picasso.get().load(FourChamp.VIDEO_BASE_URL + response.getThumbData()).into(imageView);
@@ -76,7 +76,7 @@ public class TestActivity extends AppCompatActivity {
 
     /*@Override
     public void onPaymentSuccess(String razorpayPaymentID, com.razorpay.PaymentData paymentData) {
-        Log.i(TAG, "onPaymentSuccess: "+razorpayPaymentID);
+        //Log.e(TAG, "onPaymentSuccess: "+razorpayPaymentID);
 
 
     }
@@ -125,7 +125,7 @@ public class TestActivity extends AppCompatActivity {
 
         final Gson gson = new Gson();
 
-        Log.i(TAG, "getPaymentSuccessAPI: request: " + gson.toJson(service));
+        //Log.e(TAG, "getPaymentSuccessAPI: request: " + gson.toJson(service));
 
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<PaymentResponse> call = apiInterface.getPaymentService(service);
@@ -135,7 +135,7 @@ public class TestActivity extends AppCompatActivity {
                 loadingView.setVisibility(View.GONE);
                 if (response.isSuccessful()) {
 
-                    Log.i(TAG, "onResponse: ");
+                    //Log.e(TAG, "onResponse: ");
 
                     if (response.body().getSuccess() == 1) {
                         setResult(RESULT_OK);

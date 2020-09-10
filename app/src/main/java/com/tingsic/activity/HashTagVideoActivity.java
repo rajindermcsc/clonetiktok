@@ -80,7 +80,7 @@ public class HashTagVideoActivity extends AppCompatActivity implements OnVideoLi
         jsonObject.add("data", object);
         mainJson.add("request", jsonObject);
         mainJson.addProperty("service", "getHashtagvideo");
-        Log.e(TAG, "initAdapter: " + new Gson().toJson(mainJson));
+        //Log.e(TAG, "initAdapter: " + new Gson().toJson(mainJson));
         Call<HashTagVideoResponse> userResponseCall = apiInterface.getHashTagVideo(mainJson);
         userResponseCall.enqueue(new Callback<HashTagVideoResponse>() {
             @Override

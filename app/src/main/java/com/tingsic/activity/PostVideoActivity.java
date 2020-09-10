@@ -31,6 +31,7 @@ import com.tingsic.API.ImageProgressRequestBody;
 import com.tingsic.API.ImageUploadListener;
 import com.tingsic.API.ProgressRequestBody;
 import com.tingsic.API.UploadListener;
+import com.tingsic.Helper.Functions;
 import com.tingsic.POJO.Auth;
 import com.tingsic.POJO.Upload.Multipart.UploadVideoResponse;
 import com.tingsic.POJO.Upload.Video.AddVideoRequest;
@@ -57,11 +58,9 @@ public class PostVideoActivity extends AppCompatActivity implements UploadListen
 
     String video_path;
 
-    ProgressDialog progressDialog;
     EditText et_desc;
     SocialEditText et_hastag;
     private int PAYMENT_REQUEST=232;
-    private ProgressBar progress_bar;
     String imagePath;
     ImageButton close,goback;
     Intent intent;
@@ -80,7 +79,6 @@ public class PostVideoActivity extends AppCompatActivity implements UploadListen
         video_path = intent.getStringExtra("srcMp4Path");
 //        video_path = Variables.output_filter_file;
         video_thumbnail = findViewById(R.id.video_thumbnail);
-        progress_bar = findViewById(R.id.progress_bar);
         et_hastag = findViewById(R.id.et_hastag);
         et_desc = findViewById(R.id.et_desc);
         goback = findViewById(R.id.goback);
@@ -99,9 +97,6 @@ public class PostVideoActivity extends AppCompatActivity implements UploadListen
 
 
 
-        progressDialog=new ProgressDialog(this);
-        progressDialog.setMessage("Please wait");
-        progressDialog.setCancelable(false);
 
 
 
@@ -130,8 +125,8 @@ public class PostVideoActivity extends AppCompatActivity implements UploadListen
 
                 //progressDialog.show();
                 //Start_Service();
-                Log.e("TAG", "onClick: "+video_path);
-                Log.e("TAG", "onClick: "+video_thumbnail);
+                ////Log.e("TAG", "onClick: "+video_path);
+                //Log.e("TAG", "onClick: "+video_thumbnail);
                 File thumbfile = new File(getExternalFilesDir(null), "temp.jpeg");
                 try {
                     FileOutputStream stream = new FileOutputStream(thumbfile);
@@ -155,19 +150,17 @@ public class PostVideoActivity extends AppCompatActivity implements UploadListen
             }
         });
 
-
-
     }
 
     private void uploadVideoAPI(String videoPath, String imagePath) {
-        Log.e("TAG", "uploadVideoAPI: "+videoPath);
-        Log.e("TAG", "uploadVideoAPI: "+imagePath);
+        //Log.e("TAG", "uploadVideoAPI: "+videoPath);
+        //Log.e("TAG", "uploadVideoAPI: "+imagePath);
 
         File videoFile = new File(videoPath);
         File imageFile = new File(imagePath);
 
         //todo remove Auth from here! :(
-        progressDialog.show();
+        Functions.Show_determinent_loader(this,false,false);
 
 
         ProgressRequestBody requestBody = new ProgressRequestBody(videoFile, this);
@@ -181,11 +174,12 @@ public class PostVideoActivity extends AppCompatActivity implements UploadListen
         responseCall.enqueue(new Callback<UploadVideoResponse>() {
             @Override
             public void onResponse(Call<UploadVideoResponse> call, Response<UploadVideoResponse> response) {
-                Log.e("TAG", "onResponse() returned: " + response.code());
+                //Log.e("TAG", "onResponse() returned: " + response.code());
+                Functions.cancel_determinent_loader();
                 if (response.isSuccessful()) {
-                    progressDialog.hide();
+                    Functions.cancel_determinent_loader();
                     if (response.body().getSuccess() == 1) {
-                        Log.e("TAG", "onResponse: success");
+                        //Log.e("TAG", "onResponse: success");
                         if (PrefManager.isPaidContest(PostVideoActivity.this)) {
 
                             PrefManager.setTempVUrl(PostVideoActivity.this, response.body().getData());
@@ -197,31 +191,32 @@ public class PostVideoActivity extends AppCompatActivity implements UploadListen
 
 //                            btnProccedPayment.setTag(data);
 
-                            Intent intent = new Intent(PostVideoActivity.this, TestActivity.class);
-                            intent.putExtra("data", data);
-                            if (!et_desc.getText().toString().isEmpty()) {
-                                intent.putExtra("description", et_desc.getText().toString());
-                            }
-                            if (!et_hastag.getHashtags().isEmpty()) {
-                                intent.putExtra("hashTag", TextUtils.join(",", et_hastag.getHashtags()));
-                            }
-                            startActivityForResult(intent, PAYMENT_REQUEST);
+//                            Intent intent = new Intent(PostVideoActivity.this, TestActivity.class);
+//                            intent.putExtra("data", data);
+//                            if (!et_desc.getText().toString().isEmpty()) {
+//                                intent.putExtra("description", et_desc.getText().toString());
+//                            }
+//                            if (!et_hastag.getHashtags().isEmpty()) {
+//                                intent.putExtra("hashTag", TextUtils.join(",", et_hastag.getHashtags()));
+//                            }
+//                            startActivityForResult(intent, PAYMENT_REQUEST);
                         } else {
-                            Log.e("TAG", "onResponseaddvideo: ");
+                            //Log.e("TAG", "onResponseaddvideo: ");
                             String contestId = PreferenceManager.getDefaultSharedPreferences(PostVideoActivity.this).getString("contest_id", "1");
                             addVideoAPI(response.body().getData(), response.body().getThumbData(), contestId);
                         }
                     } else {
-                        Log.e("TAG", "onResponse: success 0 " + response.body().getMessage());
+                        //Log.e("TAG", "onResponse: success 0 " + response.body().getMessage());
                     }
                 } else {
-                    Log.e("TAG", "onResponse: not succes");
+                    //Log.e("TAG", "onResponse: not succes");
                 }
             }
 
             @Override
             public void onFailure(Call<UploadVideoResponse> call, Throwable t) {
-                Log.e("TAG", "onFailure: failed");
+                Functions.cancel_determinent_loader();
+                //Log.e("TAG", "onFailure: failed");
             }
         });
 
@@ -231,7 +226,7 @@ public class PostVideoActivity extends AppCompatActivity implements UploadListen
     public void startActivityForResult(Intent intent, int requestCode) {
         super.startActivityForResult(intent, requestCode);
         if (requestCode==270){
-            Log.e("PostVideo", "startActivityForResult: ");
+            //Log.e("PostVideo", "startActivityForResult: ");
         }
     }
 
@@ -262,7 +257,9 @@ public class PostVideoActivity extends AppCompatActivity implements UploadListen
 
 
     private void addVideoAPI(String video_url, String thumb_url, String contestId) {
-        Log.e("TAG", "addVideoAPI: "+video_url);
+        //Log.e("TAG", "addVideoAPI: "+video_url);
+        //Log.e("TAG", "addVideoAPI: "+contestId);
+        //Log.e("TAG", "addVideoAPI: "+thumb_url);
 
         AddVideoRequest videoRequest = new AddVideoRequest();
 
@@ -272,15 +269,15 @@ public class PostVideoActivity extends AppCompatActivity implements UploadListen
         String token = PreferenceManager.getDefaultSharedPreferences(this).getString("token", "null");
 
         if (id == -111 || (token != null && token.equals("null"))) {
-            Log.i("TAG", "addVideoAPI: returned");
+            //Log.e("TAG", "addVideoAPI: returned");
             return;
         }
 
         Auth auth = new Auth();
         auth.setId(id);
         auth.setToken(token);
-        Log.e("TAG", "addVideoAPI: "+id);
-        Log.e("TAG", "addVideoAPI: "+token);
+        //Log.e("TAG", "addVideoAPI: "+id);
+        //Log.e("TAG", "addVideoAPI: "+token);
 
         Data data = new Data();
         data.setVideoUrl(video_url);
@@ -290,13 +287,16 @@ public class PostVideoActivity extends AppCompatActivity implements UploadListen
         if (!et_hastag.getHashtags().toString().isEmpty()) {
 
             data.setHashTag(TextUtils.join(",", Collections.singleton(et_hastag.getHashtags().toString())));
-            Log.e("TAG", "addVideoAPIhash: "+data.getHashTag());
+            //Log.e("TAG", "addVideoAPIhash: "+data.getHashTag());
         } else {
             data.setHashTag("");
         }
         if (!et_desc.getText().toString().isEmpty()) {
             data.setDescription(et_desc.getText().toString());
-            Log.e("TAG", "addVideoAPIdesc: "+data.getDescription());
+            //Log.e("TAG", "addVideoAPIdesc: "+data.getDescription());
+        }
+        else {
+            data.setDescription("");
         }
         request.setData(data);
 
@@ -309,22 +309,28 @@ public class PostVideoActivity extends AppCompatActivity implements UploadListen
         responseCall.enqueue(new Callback<AddVideoResponse>() {
             @Override
             public void onResponse(Call<AddVideoResponse> call, Response<AddVideoResponse> response) {
-                Log.e("TAG", "onResponse: AddVideo :" + response.code());
+//                //Log.e("TAG", "onResponse: AddVideo :" + response.code());
+//                //Log.e("TAG", "onResponse: AddVideo :" + response.isSuccessful());
+//                //Log.e("TAG", "onResponse: AddVideo :" + response.message().toString());
+//                //Log.e("TAG", "onResponse: AddVideo :" + response.errorBody());
+//                //Log.e("TAG", "onResponse: AddVideo :" + response.raw().request().url());
+                String mes=response.message();
+                //Log.e("TAG", "onResponse: "+mes);
                 if (response.isSuccessful()) {
                     if (response.body().getSuccess() == 1) {
-                        Log.e("TAG", "onResponse() returned: " + response.body().getMessage());
+                        //Log.e("TAG", "onResponse() returned: " + response.body().getMessage());
 
                         showUploadVideoSuccess();
                     }
                 } else {
 //                    Toast.makeText(PostVideoActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-//                    Log.e("TAG", "onResponse: " + response.body().getMessage());
+//                    //Log.e("TAG", "onResponse: " + response.body().getMessage());
                 }
             }
 
             @Override
             public void onFailure(Call<AddVideoResponse> call, Throwable t) {
-                Log.e("TAG", "onFailure: " + t.getMessage());
+                //Log.e("TAG", "onFailure: " + t.getMessage());
             }
         });
     }

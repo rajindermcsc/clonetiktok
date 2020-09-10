@@ -170,7 +170,7 @@ public enum FilterType {
                     InputStream is = context.getAssets().open("acv/tone_cuver_sample.acv");
                     return new GlToneCurveFilter(is);
                 } catch (IOException e) {
-                    Log.e("FilterType", "Error");
+                    //Log.e("FilterType", "Error");
                 }
                 return new GlFilter();
             case TONE:

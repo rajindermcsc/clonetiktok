@@ -79,8 +79,8 @@
 
 
     <!--<string name="facebook_app_id">594643011036658</string>-->
-    <string name="facebook_app_id">270019134260597</string>
-    <string name="fb_login_protocol_scheme">fb270019134260597</string>
+    <string name="facebook_app_id">341350073696052</string>
+    <string name="fb_login_protocol_scheme">fb341350073696052</string>
     <!--<string name="fb_login_protocol_scheme">fb594643011036658</string>-->
 
 
@@ -94,7 +94,7 @@
     <string name="image_desc">Ad image</string>
     <string name="valid_username">Allowed characters (i.e. a,A,0,.,_) and 2 to 20 character max.</string>
     <string name="preparing">Preparing</string>
-    <string name="google_web_client_id">886520387758-k59g60bnrc1oi9fsmiggt4lfpbliboi4.apps.googleusercontent.com</string>
+<!--    <string name="google_web_client_id">886520387758-r1p0hk0n8vqmnjvkqv8itft9eu2q8ocu.apps.googleusercontent.com</string>-->
     <string name="pay_d_points">Pay %s points</string>
     <string name="referal_code">Referral code</string>
     <string name="points">Points</string>

@@ -181,6 +181,7 @@
                 android:maxLines="1"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
+                android:visibility="gone"
                 android:textColor="@color/white" />
 
             <com.tingsic.View.SocialView.SocialTextView

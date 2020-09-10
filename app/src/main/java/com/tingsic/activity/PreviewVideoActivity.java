@@ -36,6 +36,7 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.tingsic.Adapter.FilterAdapter;
 import com.tingsic.Filter.FilterType;
+import com.tingsic.Helper.Functions;
 import com.tingsic.R;
 import com.tingsic.Utils.Variables;
 import com.tingsic.View.MovieWrapperView;
@@ -67,12 +68,12 @@ public class PreviewVideoActivity extends AppCompatActivity implements Player.Ev
         type=intent.getStringExtra("type");
         if (type.equalsIgnoreCase("selected")){
             video_url =intent.getStringExtra("video_path");
-            Log.e("TAG", "onCreateurl: "+video_url);
+            //Log.e("TAG", "onCreateurl: "+video_url);
         }
         else {
 
             video_url = Variables.outputfile2;
-            Log.e("TAG", "onCreateur: "+video_url);
+            //Log.e("TAG", "onCreateur: "+video_url);
         }
 
 
@@ -203,20 +204,17 @@ public class PreviewVideoActivity extends AppCompatActivity implements Player.Ev
     ProgressDialog progressDialog;
 
     public void Save_Video(String srcMp4Path, final String destMp4Path) {
-        Log.e("TAG", "Save_Video: "+srcMp4Path);
-        Log.e("TAG", "Save_Video: "+destMp4Path);
+        //Log.e("TAG", "Save_Video: "+srcMp4Path);
+        //Log.e("TAG", "Save_Video: "+destMp4Path);
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Please wait filter is apply...");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
+        Functions.Show_determinent_loader(this,false,false);
 
         new GPUMp4Composer(srcMp4Path, destMp4Path)
                 .filter(new GlFilterGroup(FilterType.createGlFilter(filterTypes.get(select_postion), getApplicationContext())))
                 .listener(new GPUMp4Composer.Listener() {
                     @Override
                     public void onProgress(double progress) {
-
+                        Functions.Show_loading_progress((int)(progress*100));
                     }
 
                     @Override
@@ -225,12 +223,13 @@ public class PreviewVideoActivity extends AppCompatActivity implements Player.Ev
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                String root = Environment.getExternalStorageDirectory().toString();
-                                String audio_file = root + "/" + Variables.SelectedAudio;
-                                MergeVideoAudio merge_video_audio = new MergeVideoAudio(PreviewVideoActivity.this,srcMp4Path,destMp4Path);
-                                merge_video_audio.setType(1);
-                                merge_video_audio.doInBackground(audio_file, Variables.output_filter_file, Variables.output_filter_file2);
-                                progressDialog.dismiss();
+                                Functions.cancel_determinent_loader();
+                                Intent intent = new Intent(PreviewVideoActivity.this, PostVideoActivity.class);
+                                intent.putExtra("srcMp4Path",  Variables.output_filter_file);
+                                intent.putExtra("destMp4Path", Variables.output_filter_file2);
+                                startActivityForResult(intent, 270);
+                                overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+                                finish();
 
                             }
                         });
@@ -240,13 +239,14 @@ public class PreviewVideoActivity extends AppCompatActivity implements Player.Ev
 
                     @Override
                     public void onCanceled() {
+
+                        Functions.cancel_determinent_loader();
                         Log.d("resp", "onCanceled");
                     }
 
                     @Override
                     public void onFailed(Exception exception) {
-
-                        progressDialog.dismiss();
+                        Functions.cancel_determinent_loader();
                         Toast.makeText(PreviewVideoActivity.this, "Try Again", Toast.LENGTH_SHORT).show();
 
                     }
@@ -273,10 +273,10 @@ public class PreviewVideoActivity extends AppCompatActivity implements Player.Ev
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.e("TAGPreview", "onActivityResult: "+requestCode);
+        //Log.e("TAGPreview", "onActivityResult: "+requestCode);
         if (requestCode == 270) {
             if (resultCode == RESULT_OK) {
-                Log.e("TAGPreview", "onActivityResult@: "+requestCode);
+                //Log.e("TAGPreview", "onActivityResult@: "+requestCode);
                 Intent intent = new Intent();
                 intent.putExtra("video_path", data.getStringExtra("video_path"));
                 setResult(RESULT_OK, intent);

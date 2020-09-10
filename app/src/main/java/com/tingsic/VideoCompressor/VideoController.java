@@ -112,7 +112,7 @@ public class VideoController {
                         th.start();
                         th.join();
                     } catch (Exception e) {
-                        Log.e("tmessages", e.getMessage());
+                        //Log.e("tmessages", e.getMessage());
                     }
                 }
             }).start();
@@ -385,11 +385,11 @@ public class VideoController {
                                 } else if (codecName.equals("OMX.TI.DUCATI1.VIDEO.H264E")) {
                                     processorType = PROCESSOR_TYPE_TI;
                                 }
-                                Log.e("tmessages", "codec = " + codecInfo.getName() + " manufacturer = " + manufacturer + "device = " + Build.MODEL);
+                                //Log.e("tmessages", "codec = " + codecInfo.getName() + " manufacturer = " + manufacturer + "device = " + Build.MODEL);
                             } else {
                                 colorFormat = MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface;
                             }
-                            Log.e("tmessages", "colorFormat = " + colorFormat);
+                            //Log.e("tmessages", "colorFormat = " + colorFormat);
 
                             int resultHeightAligned = resultHeight;
                             int padding = 0;
@@ -577,7 +577,7 @@ public class VideoController {
 
                                         } else if (decoderStatus == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) {
                                             MediaFormat newFormat = decoder.getOutputFormat();
-                                            Log.e("tmessages", "newFormat = " + newFormat);
+                                            //Log.e("tmessages", "newFormat = " + newFormat);
                                         } else if (decoderStatus < 0) {
                                             throw new RuntimeException("unexpected result from decoder.dequeueOutputBuffer: " + decoderStatus);
                                         } else {
@@ -596,7 +596,7 @@ public class VideoController {
                                             if (startTime > 0 && videoTime == -1) {
                                                 if (info.presentationTimeUs < startTime) {
                                                     doRender = false;
-                                                    Log.e("tmessages", "drop frame startTime = " + startTime + " present time = " + info.presentationTimeUs);
+                                                    //Log.e("tmessages", "drop frame startTime = " + startTime + " present time = " + info.presentationTimeUs);
                                                 } else {
                                                     videoTime = info.presentationTimeUs;
                                                 }
@@ -608,7 +608,7 @@ public class VideoController {
                                                     outputSurface.awaitNewImage();
                                                 } catch (Exception e) {
                                                     errorWait = true;
-                                                    Log.e("tmessages", e.getMessage());
+                                                    //Log.e("tmessages", e.getMessage());
                                                 }
                                                 if (!errorWait) {
                                                     if (Build.VERSION.SDK_INT >= 18) {
@@ -630,14 +630,14 @@ public class VideoController {
                                                             convertVideoFrame(rgbBuf, yuvBuf, colorFormat, resultWidth, resultHeight, padding, swapUV);
                                                             encoder.queueInputBuffer(inputBufIndex, 0, bufferSize, info.presentationTimeUs, 0);
                                                         } else {
-                                                            Log.e("tmessages", "input buffer not available");
+                                                            //Log.e("tmessages", "input buffer not available");
                                                         }
                                                     }
                                                 }
                                             }
                                             if ((info.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
                                                 decoderOutputAvailable = false;
-                                                Log.e("tmessages", "decoder stream end");
+                                                //Log.e("tmessages", "decoder stream end");
                                                 if (Build.VERSION.SDK_INT >= 18) {
                                                     encoder.signalEndOfInputStream();
                                                 } else {
@@ -655,7 +655,7 @@ public class VideoController {
                                 videoStartTime = videoTime;
                             }
                         } catch (Exception e) {
-                            Log.e("tmessages", e.getMessage());
+                            //Log.e("tmessages", e.getMessage());
                             error = true;
                         }
 
@@ -687,7 +687,7 @@ public class VideoController {
                 }
             } catch (Exception e) {
                 error = true;
-                Log.e("tmessages", e.getMessage());
+                //Log.e("tmessages", e.getMessage());
             } finally {
                 if (extractor != null) {
                     extractor.release();
@@ -696,10 +696,10 @@ public class VideoController {
                     try {
                         mediaMuxer.finishMovie(false);
                     } catch (Exception e) {
-                        Log.e("tmessages", e.getMessage());
+                        //Log.e("tmessages", e.getMessage());
                     }
                 }
-                Log.e("tmessages", "time = " + (System.currentTimeMillis() - time));
+                //Log.e("tmessages", "time = " + (System.currentTimeMillis() - time));
             }
         } else {
             didWriteData(true, true);
@@ -712,19 +712,19 @@ public class VideoController {
        /* File fdelete = inputFile;
         if (fdelete.exists()) {
             if (fdelete.delete()) {
-               Log.e("file Deleted :" ,inputFile.getPath());
+               //Log.e("file Deleted :" ,inputFile.getPath());
             } else {
-                Log.e("file not Deleted :" , inputFile.getPath());
+                //Log.e("file not Deleted :" , inputFile.getPath());
             }
         }*/
 
         //inputFile.delete();
-        Log.e("ViratPath",path+"");
-        Log.e("ViratPath",cacheFile.getPath()+"");
-        Log.e("ViratPath",inputFile.getPath()+"");
+        //Log.e("ViratPath",path+"");
+        //Log.e("ViratPath",cacheFile.getPath()+"");
+        //Log.e("ViratPath",inputFile.getPath()+"");
 
 
-       /* Log.e("ViratPath",path+"");
+       /* //Log.e("ViratPath",path+"");
         File replacedFile = new File(path);
         FileOutputStream fos = null;
         InputStream inputStream = null;

@@ -40,9 +40,9 @@ public class ProfileActivity extends AppCompatActivity implements OnVideoListene
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
+//        Log.e(TAG, "onCreate: ehi hai");
         if (isUserLoggedIn()) {
-            Log.e(TAG, "onCreate: ");
+            //Log.e(TAG, "onCreate: ");
             ProfileFragment userFragment = new ProfileFragment();
             Bundle bundle = new Bundle();
             userFragment.setArguments(bundle);

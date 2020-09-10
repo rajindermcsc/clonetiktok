@@ -69,7 +69,6 @@ import com.tingsic.VideoCompress.Compressor;
 import com.tingsic.VideoCompress.InitListener;
 import com.tingsic.VideoCompressor.VideoCompress;
 import com.tingsic.View.SocialView.SocialEditText;
-import com.tingsic.activity.AddActivity;
 import com.tingsic.activity.TestActivity;
 import com.tingsic.activity.VideoRecorderActivity;
 
@@ -245,7 +244,7 @@ public class AddFragment extends Fragment  {
 //
 //            @Override
 //            public void onLoadFail(String reason) {
-//                Log.e(TAG, "onLoadFail() returned: " + reason);
+//                //Log.e(TAG, "onLoadFail() returned: " + reason);
 //            }
 //        });
 //    }
@@ -373,7 +372,7 @@ public class AddFragment extends Fragment  {
 //                Uri videoUri = data.getData();
 //                this.videoPath = PathFromUri.getRealPath(getContext(), videoUri);
 //                Log.i(TAG, "onActivityResult: Videouri: " + videoUri.toString());
-//                Log.e(TAG, "onActivityResult: code req res " + requestCode + resultCode);
+//                //Log.e(TAG, "onActivityResult: code req res " + requestCode + resultCode);
 //                Log.i(TAG, "onActivityResult: " + videoPath);
 //
 //                Log.i(TAG, "onActivityResult: Size " + getFileSize(videoUri) + " Bytes");
@@ -398,7 +397,7 @@ public class AddFragment extends Fragment  {
 //
 //                        imagePath = thumbfile.getPath();
 //                    }
-//                    Log.e(TAG, "onActivityResult: Image Path " + imagePath);
+//                    //Log.e(TAG, "onActivityResult: Image Path " + imagePath);
 //                } catch (FileNotFoundException e) {
 //                    e.printStackTrace();
 //                }
@@ -501,7 +500,7 @@ public class AddFragment extends Fragment  {
 //            if (resultCode == RESULT_OK) {
 //                Uri videoUri = data.getData();
 //                Log.i(TAG, "onActivityResult: Videouri: " + videoUri.toString());
-//                Log.e(TAG, "onActivityResult: code req res " + requestCode + resultCode);
+//                //Log.e(TAG, "onActivityResult: code req res " + requestCode + resultCode);
 //                Log.i(TAG, "onActivityResult: " + getPath(videoUri));
 //                Log.i(TAG, "onActivityResult: " + getFileSize(videoUri));
 //
@@ -521,7 +520,7 @@ public class AddFragment extends Fragment  {
 //
 //                        imagePath = thumbfile.getPath();
 //                    }
-//                    Log.e(TAG, "onActivityResult: Image Path " + imagePath);
+//                    //Log.e(TAG, "onActivityResult: Image Path " + imagePath);
 //                } catch (FileNotFoundException e) {
 //                    e.printStackTrace();
 //                }
@@ -910,7 +909,7 @@ public class AddFragment extends Fragment  {
 //
 //    @Override
 //    public void onError() {
-//        Log.e(TAG, "onError: Error uploading Video");
+//        //Log.e(TAG, "onError: Error uploading Video");
 //    }
 //
 //    @Override
@@ -920,7 +919,7 @@ public class AddFragment extends Fragment  {
 //
 //    @Override
 //    public void onUploadStart() {
-//        Log.e(TAG, "onUploadStart: started");
+//        //Log.e(TAG, "onUploadStart: started");
 //    }
 //
 //    @Override

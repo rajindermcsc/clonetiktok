@@ -176,7 +176,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             logInCall.enqueue(new Callback<LogIn>() {
                 @Override
                 public void onResponse(Call<LogIn> call, Response<LogIn> response) {
-                    Log.i(TAG, "onResponse: "+response.code());
+                    //Log.e(TAG, "onResponse: "+response.code());
                     if (response.isSuccessful()){
                         if (response.body().getSuccess() == 1)
                         {
@@ -184,7 +184,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                             int id = Integer.parseInt(response.body().getData().getUserId());
                             String token = response.body().getToken();
 
-                            Toast toast = Toast.makeText(LogInActivity.this, "Log in Successful!", Toast.LENGTH_SHORT);
+                            Toast toast = Toast.makeText(LogInActivity.this, "//Log.en Successful!", Toast.LENGTH_SHORT);
                             toast.setGravity(Gravity.CENTER,0,0);
                             toast.show();
 

@@ -84,7 +84,7 @@ public class HashTagAdapter extends RecyclerView.Adapter<HashTagAdapter.HashTagV
                 binding.ivthumb.setImageDrawable(itemView.getContext().getResources().getDrawable(R.drawable.ic_video));
                 binding.ivthumb.setBackgroundColor(Color.parseColor("#39476C"));
             } else {
-                Log.i("Thumb", "onBindViewHolder: " + VIDEO_BASE_URL + thumb_url);
+                //Log.e("Thumb", "onBindViewHolder: " + VIDEO_BASE_URL + thumb_url);
                 Picasso.get().load(VIDEO_BASE_URL + thumb_url).placeholder(R.drawable.post_placeholder).into(this);
             }
         }

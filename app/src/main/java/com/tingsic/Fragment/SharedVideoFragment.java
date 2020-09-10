@@ -55,7 +55,6 @@ import com.tingsic.R;
 import com.tingsic.Transformation.CircleTransform;
 import com.tingsic.Utils.PreciseCount;
 import com.tingsic.View.LikeButton.LikeButton;
-import com.tingsic.activity.AddActivity;
 import com.tingsic.activity.MainActivity;
 import com.tingsic.activity.UserActivity;
 import com.tingsic.activity.VideoRecorderActivity;

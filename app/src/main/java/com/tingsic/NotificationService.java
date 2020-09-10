@@ -41,17 +41,17 @@ public class NotificationService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        Log.d(TAG, "From: " + remoteMessage.getFrom());
+        //Log.e(TAG, "From: " + remoteMessage.getFrom());
         sharedPreferences=getSharedPreferences(Myconstant.Sharedprefernce,MODE_PRIVATE);
         editor=sharedPreferences.edit();
         if (remoteMessage.getData().size() > 0) {
-            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+            //Log.e(TAG, "Message data payload: " + remoteMessage.getData());
 
             try {
                 JSONObject json = new JSONObject(remoteMessage.getData().toString());
                 JSONObject payload = json.getJSONObject("message");
                 //handleDataMessage(json);
-                Log.i("JSON",""+json);
+                //Log.e("JSON",""+json);
                 String message = payload.getString("message");
                 dbHelper = new DBHelper(this);
                 mDB = openOrCreateDatabase(Myconstant.DATABASE_NAME, MODE_PRIVATE, null);
@@ -87,7 +87,7 @@ public class NotificationService extends FirebaseMessagingService {
                 //sendNotification(message,jsonArray.toString());
 
             } catch (Exception e) {
-                Log.e(TAG, "Exception: " + e);
+                //Log.e(TAG, "Exception: " + e);
             }
         }
 
@@ -96,7 +96,7 @@ public class NotificationService extends FirebaseMessagingService {
 
     @Override
     public void onNewToken(String s) {
-        Log.d(TAG, "Refreshed token: " + s);
+        //Log.e(TAG, "Refreshed token: " + s);
 
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
@@ -197,7 +197,7 @@ public class NotificationService extends FirebaseMessagingService {
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("dd MMM,yyyy hh:mm a");
         String noti_date = df.format(c.getTime());
-        Log.e(TAG, "sendMyNotification: "+noti_date);
+        //Log.e(TAG, "sendMyNotification: "+noti_date);
 
         savedata_tosqlite(data,messageBody,noti_date);
     }
@@ -218,7 +218,7 @@ public class NotificationService extends FirebaseMessagingService {
                 }
             }while (curuser.moveToNext());
         } catch (Exception ioe) {
-            Log.e(TAG, "Exception : " + ioe.getLocalizedMessage());
+            //Log.e(TAG, "Exception : " + ioe.getLocalizedMessage());
             dbHelper.close();
         }
     }

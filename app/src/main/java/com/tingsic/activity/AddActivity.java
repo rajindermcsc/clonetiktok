@@ -252,7 +252,7 @@ public class AddActivity extends AppCompatActivity implements UploadListener, Im
 
             @Override
             public void onLoadFail(String reason) {
-                Log.e(TAG, "onLoadFail() returned: " + reason);
+                //Log.e(TAG, "onLoadFail() returned: " + reason);
             }
         });
     }
@@ -284,7 +284,7 @@ public class AddActivity extends AppCompatActivity implements UploadListener, Im
         gallary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e(TAG, "onClick: ");
+                //Log.e(TAG, "onClick: ");
                 dialog.dismiss();
                 Intent intent = new Intent();
                 intent.setType("video/*");
@@ -324,7 +324,7 @@ public class AddActivity extends AppCompatActivity implements UploadListener, Im
         if (resultCode == RESULT_OK) {
             if (requestCode == 250) {
 
-                Log.i(TAG, "onActivityResult: test activty result" + data.getStringExtra("video_path"));
+                //Log.e(TAG, "onActivityResult: test activty result" + data.getStringExtra("video_path"));
 
                 this.videoPath = data.getStringExtra("video_path");
 //                this.videoPath = Variables.output_filter_file;
@@ -362,11 +362,11 @@ public class AddActivity extends AppCompatActivity implements UploadListener, Im
             if (requestCode == SELECT_VIDEO) {
                 Uri videoUri = data.getData();
                 this.videoPath = PathFromUri.getRealPath(this, videoUri);
-                Log.i(TAG, "onActivityResult: Videouri: " + videoUri.toString());
-                Log.e(TAG, "onActivityResult: code req res " + requestCode + resultCode);
-                Log.i(TAG, "onActivityResult: " + videoPath);
+                //Log.e(TAG, "onActivityResult: Videouri: " + videoUri.toString());
+                //Log.e(TAG, "onActivityResult: code req res " + requestCode + resultCode);
+                //Log.e(TAG, "onActivityResult: " + videoPath);
 
-                Log.i(TAG, "onActivityResult: Size " + getFileSize(videoUri) + " Bytes");
+                //Log.e(TAG, "onActivityResult: Size " + getFileSize(videoUri) + " Bytes");
 
                 /*if (Build.VERSION.SDK_INT <= 26) {
                     this.videoPath = getPath(videoUri);
@@ -388,7 +388,7 @@ public class AddActivity extends AppCompatActivity implements UploadListener, Im
 
                         imagePath = thumbfile.getPath();
                     }
-                    Log.e(TAG, "onActivityResult: Image Path " + imagePath);
+                    //Log.e(TAG, "onActivityResult: Image Path " + imagePath);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -397,7 +397,7 @@ public class AddActivity extends AppCompatActivity implements UploadListener, Im
                     this.imagePath = getThumbnailPathForLocalFile(videoUri);
                 }
 
-                Log.i(TAG, "onActivityResult: thumbPsth: " + imagePath);
+                //Log.e(TAG, "onActivityResult: thumbPsth: " + imagePath);
 
                 ivVideoThumnb.setVisibility(View.VISIBLE);
                 ivVideoThumnb.setClickable(false);
@@ -490,10 +490,10 @@ public class AddActivity extends AppCompatActivity implements UploadListener, Im
         if (requestCode == VIDEO_CAPTURE) {
             if (resultCode == RESULT_OK) {
                 Uri videoUri = data.getData();
-                Log.i(TAG, "onActivityResult: Videouri: " + videoUri.toString());
-                Log.e(TAG, "onActivityResult: code req res " + requestCode + resultCode);
-                Log.i(TAG, "onActivityResult: " + getPath(videoUri));
-                Log.i(TAG, "onActivityResult: " + getFileSize(videoUri));
+                //Log.e(TAG, "onActivityResult: Videouri: " + videoUri.toString());
+                //Log.e(TAG, "onActivityResult: code req res " + requestCode + resultCode);
+                //Log.e(TAG, "onActivityResult: " + getPath(videoUri));
+                //Log.e(TAG, "onActivityResult: " + getFileSize(videoUri));
 
                 ivVideoThumnb.setVisibility(View.VISIBLE);
                 Picasso.get().load("file://" + imagePath).into(ivVideoThumnb);
@@ -511,7 +511,7 @@ public class AddActivity extends AppCompatActivity implements UploadListener, Im
 
                         imagePath = thumbfile.getPath();
                     }
-                    Log.e(TAG, "onActivityResult: Image Path " + imagePath);
+                    //Log.e(TAG, "onActivityResult: Image Path " + imagePath);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -589,14 +589,14 @@ public class AddActivity extends AppCompatActivity implements UploadListener, Im
         VideoCompress.compressVideoLow(iPath, oPath, new VideoCompress.CompressListener() {
             @Override
             public void onStart() {
-                Log.i(TAG, "onStart: Started");
+                //Log.e(TAG, "onStart: Started");
                 btnUpload.setVisibility(View.GONE);
                 etHashtag.setVisibility(View.GONE);
             }
 
             @Override
             public void onSuccess() {
-                Log.i(TAG, "onSuccess: ");
+                //Log.e(TAG, "onSuccess: ");
                 File file = new File(videoPath);
                 long length = file.length();
                 if (length > 600000000) {
@@ -650,7 +650,7 @@ public class AddActivity extends AppCompatActivity implements UploadListener, Im
             public void onExecSuccess(String message) {
                 btnUpload.setVisibility(View.VISIBLE);
                 etHashtag.setVisibility(View.VISIBLE);
-                Log.d(TAG, "onExecSuccess() returned: " + message);
+                //Log.e(TAG, "onExecSuccess() returned: " + message);
             }
 
             @Override
@@ -662,7 +662,7 @@ public class AddActivity extends AppCompatActivity implements UploadListener, Im
 
             @Override
             public void onExecProgress(String message) {
-                Log.i(TAG, "onExecProgress: " + message);
+                //Log.e(TAG, "onExecProgress: " + message);
             }
 
             @Override
@@ -714,10 +714,10 @@ public class AddActivity extends AppCompatActivity implements UploadListener, Im
         responseCall.enqueue(new Callback<UploadVideoResponse>() {
             @Override
             public void onResponse(Call<UploadVideoResponse> call, Response<UploadVideoResponse> response) {
-                Log.d(TAG, "onResponse() returned: " + response.code());
+                //Log.e(TAG, "onResponse() returned: " + response.code());
                 if (response.isSuccessful()) {
                     if (response.body().getSuccess() == 1) {
-                        Log.i(TAG, "onResponse: success");
+                        //Log.e(TAG, "onResponse: success");
                         if (PrefManager.isPaidContest(AddActivity.this)) {
 
                             PrefManager.setTempVUrl(AddActivity.this, response.body().getData());
@@ -743,16 +743,16 @@ public class AddActivity extends AppCompatActivity implements UploadListener, Im
                             addVideoAPI(response.body().getData(), response.body().getThumbData(), contestId);
                         }
                     } else {
-                        Log.i(TAG, "onResponse: success 0 " + response.body().getMessage());
+                        //Log.e(TAG, "onResponse: success 0 " + response.body().getMessage());
                     }
                 } else {
-                    Log.i(TAG, "onResponse: not succes");
+                    //Log.e(TAG, "onResponse: not succes");
                 }
             }
 
             @Override
             public void onFailure(Call<UploadVideoResponse> call, Throwable t) {
-                Log.i(TAG, "onFailure: failed");
+                //Log.e(TAG, "onFailure: failed");
             }
         });
 
@@ -768,7 +768,7 @@ public class AddActivity extends AppCompatActivity implements UploadListener, Im
         String token = PreferenceManager.getDefaultSharedPreferences(this).getString("token", "null");
 
         if (id == -111 || (token != null && token.equals("null"))) {
-            Log.i(TAG, "addVideoAPI: returned");
+            //Log.e(TAG, "addVideoAPI: returned");
             return;
         }
 
@@ -800,22 +800,22 @@ public class AddActivity extends AppCompatActivity implements UploadListener, Im
         responseCall.enqueue(new Callback<AddVideoResponse>() {
             @Override
             public void onResponse(Call<AddVideoResponse> call, Response<AddVideoResponse> response) {
-                Log.i(TAG, "onResponse: AddVideo :" + response.code());
+                //Log.e(TAG, "onResponse: AddVideo :" + response.code());
                 if (response.isSuccessful()) {
                     if (response.body().getSuccess() == 1) {
-                        Log.d(TAG, "onResponse() returned: " + response.body().getMessage());
+                        //Log.e(TAG, "onResponse() returned: " + response.body().getMessage());
 
                         showUploadVideoSuccess();
                     }
                 } else {
                     Toast.makeText(AddActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.i(TAG, "onResponse: " + response.body().getMessage());
+                    //Log.e(TAG, "onResponse: " + response.body().getMessage());
                 }
             }
 
             @Override
             public void onFailure(Call<AddVideoResponse> call, Throwable t) {
-                Log.i(TAG, "onFailure: " + t.getMessage());
+                //Log.e(TAG, "onFailure: " + t.getMessage());
             }
         });
     }
@@ -860,7 +860,7 @@ public class AddActivity extends AppCompatActivity implements UploadListener, Im
 
 
             thumbCursor.close();
-            Log.i(TAG, "getThumbnailPathForLocalFile: " + thumbPath);
+            //Log.e(TAG, "getThumbnailPathForLocalFile: " + thumbPath);
             return thumbPath;
 
         } finally {
@@ -899,17 +899,17 @@ public class AddActivity extends AppCompatActivity implements UploadListener, Im
 
     @Override
     public void onError() {
-        Log.e(TAG, "onError: Error uploading Video");
+        //Log.e(TAG, "onError: Error uploading Video");
     }
 
     @Override
     public void onFinish() {
-        Log.i(TAG, "onFinish: finished");
+        //Log.e(TAG, "onFinish: finished");
     }
 
     @Override
     public void onUploadStart() {
-        Log.e(TAG, "onUploadStart: started");
+        //Log.e(TAG, "onUploadStart: started");
     }
 
     @Override

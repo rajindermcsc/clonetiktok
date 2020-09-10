@@ -50,7 +50,7 @@ public class JZTextureView extends TextureView {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        Log.i(TAG, "onMeasure " + " [" + this.hashCode() + "] ");
+        //Log.e(TAG, "onMeasure " + " [" + this.hashCode() + "] ");
         int viewRotation = (int) getRotation();
         int videoWidth = currentVideoWidth;
         int videoHeight = currentVideoHeight;
@@ -86,8 +86,8 @@ public class JZTextureView extends TextureView {
             int heightSpecMode = MeasureSpec.getMode(heightMeasureSpec);
             int heightSpecSize = MeasureSpec.getSize(heightMeasureSpec);
 
-            Log.i(TAG, "widthMeasureSpec  [" + MeasureSpec.toString(widthMeasureSpec) + "]");
-            Log.i(TAG, "heightMeasureSpec [" + MeasureSpec.toString(heightMeasureSpec) + "]");
+            //Log.e(TAG, "widthMeasureSpec  [" + MeasureSpec.toString(widthMeasureSpec) + "]");
+            //Log.e(TAG, "heightMeasureSpec [" + MeasureSpec.toString(heightMeasureSpec) + "]");
 
             if (widthSpecMode == MeasureSpec.EXACTLY && heightSpecMode == MeasureSpec.EXACTLY) {
                 // the size is fixed

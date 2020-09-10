@@ -67,13 +67,13 @@ public class NotificationActivity extends AppCompatActivity  {
             for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
                 fm.popBackStackImmediate();
             }
-            Log.i("TAG","count"+fm.getBackStackEntryCount());
+            //Log.e("TAG","count"+fm.getBackStackEntryCount());
 
         }
 
         FourChamp.setIsParentResumed(false);
 
-        Log.i("TAG","count: "+isResumed);
+        //Log.e("TAG","count: "+isResumed);
 
         super.onResume();
 

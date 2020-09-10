@@ -82,7 +82,7 @@ public class SegmentedProgressBar extends View {
                 public void onGlobalLayout() {
                     getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     progressBarWidth = getWidth();
-                    Log.d(TAG, "setShader: progressBarWidth : " + progressBarWidth);
+                    //Log.e(TAG, "setShader: progressBarWidth : " + progressBarWidth);
 
                     if (gradientColors.length > 0) {
                         Shader shader = new LinearGradient(0, 0, progressBarWidth, getHeight(), gradientColors, null, Shader.TileMode.MIRROR);
@@ -128,7 +128,7 @@ public class SegmentedProgressBar extends View {
 
     public void pause() {
         if (countDownTimerWithPause == null) {
-            Log.e(TAG, "pause: Auto progress is not initialized. Use \"enableAutoProgressView\" to initialize the progress bar.");
+            //Log.e(TAG, "pause: Auto progress is not initialized. Use \"enableAutoProgressView\" to initialize the progress bar.");
             return;
         }
 
@@ -140,7 +140,7 @@ public class SegmentedProgressBar extends View {
      */
     public void resume() {
         if (countDownTimerWithPause == null) {
-            Log.e(TAG, "resume: Auto progress is not initialized. Use \"enableAutoProgressView\" to initialize the progress bar.");
+            //Log.e(TAG, "resume: Auto progress is not initialized. Use \"enableAutoProgressView\" to initialize the progress bar.");
             return;
         }
 
@@ -159,7 +159,7 @@ public class SegmentedProgressBar extends View {
 
     public void cancel() {
         if (countDownTimerWithPause == null) {
-            Log.e(TAG, "cancel: Auto progress is not initialized. Use \"enableAutoProgressView\" to initialize the progress bar.");
+            //Log.e(TAG, "cancel: Auto progress is not initialized. Use \"enableAutoProgressView\" to initialize the progress bar.");
             return;
         }
 

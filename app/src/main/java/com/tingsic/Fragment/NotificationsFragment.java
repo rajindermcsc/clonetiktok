@@ -66,11 +66,11 @@ public class NotificationsFragment extends Fragment {
             getdatafrom_database();
         } catch (Exception e)
         {
-            Log.e(TAG, "onCreate1: " + e.getMessage());
+            //Log.e(TAG, "onCreate1: " + e.getMessage());
         }
         nodatafound = view.findViewById(R.id.nodatafound);
         try {
-            Log.e(TAG, "onCreate: " + curuser.getCount());
+            //Log.e(TAG, "onCreate: " + curuser.getCount());
             if (curuser.getCount() == 0) {
                 nodatafound.setVisibility(View.VISIBLE);
             } else {
@@ -80,7 +80,7 @@ public class NotificationsFragment extends Fragment {
                 initViews();
             }
         } catch (Exception e) {
-            Log.e(TAG, "onCreate3: " + e.getMessage());
+            //Log.e(TAG, "onCreate3: " + e.getMessage());
         }
         return view;
     }
@@ -89,26 +89,26 @@ public class NotificationsFragment extends Fragment {
     {
         try {
             curuser = mDb.rawQuery("SELECT  * FROM usertable", null);
-            Log.e(TAG, "savedata_tosqlite: " + curuser.getCount());
+            //Log.e(TAG, "savedata_tosqlite: " + curuser.getCount());
             curuser.moveToFirst();
             do {
                 String userloginid = curuser.getString(curuser.getColumnIndex("user"));
-                Log.e(TAG, "savedata_tosqlite: " + userloginid);
+                //Log.e(TAG, "savedata_tosqlite: " + userloginid);
                 if (userloginid.equals(sharedPreferences.getString(Myconstant.USER_LOGINID, ""))) {
                     userid = curuser.getString(curuser.getColumnIndex("user_id"));
                     try {
-                        Log.e(TAG, "userid: " + userid);
+                        //Log.e(TAG, "userid: " + userid);
                         curuser = mDb.rawQuery("Select * from notificationtable where user_id='" + userid + "'ORDER BY notification_id DESC ", null);
-                        Log.e(TAG, "onCreate: " + curuser.getCount());
+                        //Log.e(TAG, "onCreate: " + curuser.getCount());
                     } catch (Exception e) {
-                        Log.e(TAG, "exception: " +e.getMessage());
+                        //Log.e(TAG, "exception: " +e.getMessage());
                     }
                 } else {
-                    Log.e(TAG, "no userfound");
+                    //Log.e(TAG, "no userfound");
                 }
             } while (curuser.moveToNext());
         } catch (Exception e) {
-            Log.e(TAG, "Excetion1: " + e.getMessage());
+            //Log.e(TAG, "Excetion1: " + e.getMessage());
         }
     }
     public void initViews() {

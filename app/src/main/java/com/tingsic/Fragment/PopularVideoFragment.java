@@ -227,7 +227,7 @@ public class PopularVideoFragment extends Fragment implements RecyclerView.OnChi
 
         MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(Uri.parse(VIDEO_BASE_URL + item.getVideoUrl()));
-        Log.e("resp", VIDEO_BASE_URL + item.getVideoUrl());
+        //Log.e("resp", VIDEO_BASE_URL + item.getVideoUrl());
 
 
         player.prepare(videoSource);
@@ -337,8 +337,8 @@ public class PopularVideoFragment extends Fragment implements RecyclerView.OnChi
     @Override
     public void onResume() {
         super.onResume();
-        Log.e(TAG, "onResume: ");
-        Log.e(TAG, "onResume: "+currentPage);
+        //Log.e(TAG, "onResume: ");
+        //Log.e(TAG, "onResume: "+currentPage);
         if (first_time==1){
             first_time++;
         }
@@ -405,20 +405,21 @@ public class PopularVideoFragment extends Fragment implements RecyclerView.OnChi
 
             @Override
             public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
-                Log.e(TAG, "onResponse: "+response.message());
-                Log.e(TAG, "onResponse: "+response.errorBody());
-//                Log.e(TAG, "onResponse: "+response.body().getVideos());
-//                Log.e(TAG, "onResponse: "+response.body().getVideosUrl());
-                Log.e(TAG, "onResponse: "+response.toString());
-//                Log.e(TAG, "onResponse: "+response.raw().body());
-                Log.e(TAG, "onResponse: "+response.raw().request().url());
-//                Log.e("<<<Response>>>", Gson().toJson(response.body()));
+                //Log.e(TAG, "onResponse: "+response.message());
+                //Log.e(TAG, "onResponse: "+response.errorBody());
+                //Log.e(TAG, "onResponse: "+response.body().getSuccess());
+                //Log.e(TAG, "onResponse: "+response.body().getVideos());
+                //Log.e(TAG, "onResponse: "+response.body().getVideosUrl());
+                //Log.e(TAG, "onResponse: "+response.toString());
+//                //Log.e(TAG, "onResponse: "+response.raw().body());
+                //Log.e(TAG, "onResponse: "+response.raw().request().url());
+//                //Log.e("<<<Response>>>", Gson().toJson(response.body()));
                 if (page == 1) {
                     loadingView.setVisibility(View.GONE);
                 }
-//                Log.e(TAG, "onResponse: " + response.code());
-//                Log.e(TAG, "onResponse: " + response.body().toString());
-//                Log.e(TAG, "onResponse: " + response.body().getVideos());
+//                //Log.e(TAG, "onResponse: " + response.code());
+//                //Log.e(TAG, "onResponse: " + response.body().toString());
+//                //Log.e(TAG, "onResponse: " + response.body().getVideos());
                 if (response.isSuccessful()) {
                     if (response.body().getSuccess() == 1) {
 
@@ -432,11 +433,11 @@ public class PopularVideoFragment extends Fragment implements RecyclerView.OnChi
                             LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
 
                         }
-                        Log.i(TAG, "onResponse: " + videos.size());
+                        //Log.e(TAG, "onResponse: " + videos.size());
 
                     } else {
 
-                        Log.e(TAG, "onResponse: no success");
+                        //Log.e(TAG, "onResponse: no success");
                         if (page != 1) {
                             Intent intent = new Intent("load_more");
                             intent.putExtra("isLoading", false);
@@ -468,7 +469,7 @@ public class PopularVideoFragment extends Fragment implements RecyclerView.OnChi
                     intent.putExtra("isLoading", false);
                     LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
                 }
-                Log.e(TAG, "onFailure: " + t.getMessage() + " " + t.toString());
+                //Log.e(TAG, "onFailure: " + t.getMessage() + " " + t.toString());
             }
         });
     }
@@ -486,7 +487,7 @@ public class PopularVideoFragment extends Fragment implements RecyclerView.OnChi
         String contestId = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("contest_id", "1");
 
         if (id == -111 || token.equals("null")) {
-            Log.i(TAG, "addVideoAPI: returned");
+            //Log.e(TAG, "addVideoAPI: returned");
             return;
         }
 
@@ -543,7 +544,7 @@ public class PopularVideoFragment extends Fragment implements RecyclerView.OnChi
     }
     @Override
     public void onLoadMore() {
-        Log.e(TAG, "onLoadMore: TRUE");
+        //Log.e(TAG, "onLoadMore: TRUE");
         Intent intent = new Intent("load_more");
         intent.putExtra("isLoading", true);
         LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);

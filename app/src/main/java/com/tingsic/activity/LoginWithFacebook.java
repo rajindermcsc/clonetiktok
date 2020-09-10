@@ -203,12 +203,12 @@ public class LoginWithFacebook extends AppCompatActivity {
 
         dialog.show();
 
-       /* Log.v("AAAAAAAAA", "id=> " + id);
-        Log.v("AAAAAAAAA", "f_name=> " + f_name);
-        Log.v("AAAAAAAAA", "l_name=> " + l_name);
-        Log.v("AAAAAAAAA", "picture=> " + picture);
-        Log.v("AAAAAAAAA", "singnup_type=> " + singnup_type);*/
-        Log.v("AAAAAAAAA", "id=> " + id);
+       /* //Log.e("AAAAAAAAA", "id=> " + id);
+        //Log.e("AAAAAAAAA", "f_name=> " + f_name);
+        //Log.e("AAAAAAAAA", "l_name=> " + l_name);
+        //Log.e("AAAAAAAAA", "picture=> " + picture);
+        //Log.e("AAAAAAAAA", "singnup_type=> " + singnup_type);*/
+        //Log.e("AAAAAAAAA", "id=> " + id);
         LogInRequest service = new LogInRequest();
         Request request = new Request();
         Data data = new Data();
@@ -219,8 +219,8 @@ public class LoginWithFacebook extends AppCompatActivity {
 
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<LogIn> logInCall = apiInterface.getLogIn(service);
-        Log.v("AAAAAAAAA","service=> "+new Gson().toJson(service));
-        Log.v("AAAAAAAAA",""+logInCall.request());
+        //Log.e("AAAAAAAAA","service=> "+new Gson().toJson(service));
+        //Log.e("AAAAAAAAA",""+logInCall.request());
         logInCall.enqueue(new Callback<LogIn>() {
             @Override
             public void onResponse(Call<LogIn> call, Response<LogIn> response) {
@@ -355,10 +355,10 @@ public class LoginWithFacebook extends AppCompatActivity {
                     else {
                         Toast.makeText(LoginWithFacebook.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                         PreferenceManager.getDefaultSharedPreferences(LoginWithFacebook.this).edit().putBoolean("isLoggedIn",false).apply();
-                        Log.e(TAG, "onResponse: Error success=0");
+                        //Log.e(TAG, "onResponse: Error success=0");
 
                     }
-                    Log.e(TAG, "onResponse: Error success= "+response.body().getSuccess()+" "+response.body().getMessage());
+                    //Log.e(TAG, "onResponse: Error success= "+response.body().getSuccess()+" "+response.body().getMessage());
                 }
                 dialog.dismiss();
             }
@@ -393,24 +393,24 @@ public class LoginWithFacebook extends AppCompatActivity {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             System.out.println(account);
             // Signed in successfully, show authenticated UI.
-            onLoggedIn(account);
+            onLogin(account);
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
             e.printStackTrace();
-            onLoggedIn(null);
+            onLogin(null);
         }
     }
 
-    private void onLoggedIn(GoogleSignInAccount account) {
+    private void onLogin(GoogleSignInAccount account) {
 
         if (account != null) {
-            Log.d(TAG, "onLoggedIn() returned: " + account.getDisplayName() );
-            Log.d(TAG, "onLoggedIn() returned: " + account.getEmail() );
-            Log.d(TAG, "onLoggedIn() returned: " + account.getIdToken() );
-            Log.d(TAG, "onLoggedIn() returned: " + account.getPhotoUrl() );
-            Log.d(TAG, "onLoggedIn() returned: " + account.getId() );
+            //Log.e(TAG, "on//Log.edIn() returned: " + account.getDisplayName() );
+            //Log.e(TAG, "on//Log.edIn() returned: " + account.getEmail() );
+            Log.d(TAG, "on//Log.edIn() returned: " + account.getIdToken() );
+            Log.d(TAG, "on//Log.edIn() returned: " + account.getPhotoUrl() );
+            Log.d(TAG, "on//Log.edIn() returned: " + account.getId() );
 
             String fname,lname;
             try {

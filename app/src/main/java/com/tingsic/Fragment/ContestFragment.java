@@ -166,7 +166,7 @@ public class ContestFragment extends Fragment implements OnLoadMoreListener {
     @Override
     public void onLoadMore() {
 
-        Log.e(TAG, "onLoadMore: TRUE");
+        //Log.e(TAG, "onLoadMore: TRUE");
         page++;
         loadMore.setVisibility(View.VISIBLE);
         getContestAPI(page);

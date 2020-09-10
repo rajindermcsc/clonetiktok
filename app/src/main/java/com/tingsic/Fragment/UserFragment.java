@@ -236,6 +236,7 @@ public class UserFragment extends Fragment {
                             @Override
                             public void onClick(View v) {
                                 if (isUserLoggedIn()) {
+                                    Log.e(TAG, "onClickyes: "+isUserLoggedIn());
                                     btnFollow.setClickable(false);
                                     if (isFollowing) {
                                         doFollowing("UserUnfollow","unfollowing",userId);
@@ -255,6 +256,7 @@ public class UserFragment extends Fragment {
                                     }
                                 }
                                 else {
+                                    Log.e(TAG, "onClickno: "+isUserLoggedIn());
                                     showLogInFragment();
                                 }
                             }
@@ -369,6 +371,7 @@ public class UserFragment extends Fragment {
             Auth auth = new Auth();
             int id = PreferenceManager.getDefaultSharedPreferences(getContext()).getInt("id",-111);
             String token = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token","null");
+            Log.e(TAG, "doFollowing: "+token);
 
             if (id == -111 || token.equals("null")) {
                 showLogInFragment();

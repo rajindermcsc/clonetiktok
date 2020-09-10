@@ -8,12 +8,13 @@ import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-//import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -21,6 +22,8 @@ import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,46 +31,23 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.login.LoginResult;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.gson.GsonBuilder;
-import com.stfalcon.smsverifycatcher.OnSmsCatchListener;
-import com.stfalcon.smsverifycatcher.SmsVerifyCatcher;
-import com.tingsic.API.Api_Interface;
-import com.tingsic.API.MessageResponse;
-import com.tingsic.NotificationService;
-import com.tingsic.POJO.SignUp.Request.SignUpRequest;
-import com.tingsic.POJO.SignUp.Response.SignUpResponse;
-import com.tingsic.R;
-import com.tingsic.Utils.PrefManager;
-import com.tingsic.activity.HomeActivity;
-import com.tingsic.activity.LogInActivity;
-import com.tingsic.activity.LoginWithFacebook;
-import com.tingsic.activity.MainActivity;
-import com.tingsic.activity.PrivacyPolicy;
-import com.tingsic.activity.SignUpActivity;
-
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
-import android.preference.PreferenceManager;
-import android.util.Base64;
-import android.util.Log;
-import android.view.Gravity;
-import android.widget.ImageView;
-import android.widget.Toast;
-
-import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -75,6 +55,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
@@ -82,21 +63,32 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.stfalcon.smsverifycatcher.SmsVerifyCatcher;
 import com.tingsic.API.ApiClient;
 import com.tingsic.API.ApiInterface;
+import com.tingsic.API.Api_Interface;
+import com.tingsic.API.MessageResponse;
+import com.tingsic.NotificationService;
 import com.tingsic.POJO.LogIn.Request.Data;
 import com.tingsic.POJO.LogIn.Request.LogInRequest;
 import com.tingsic.POJO.LogIn.Request.Request;
 import com.tingsic.POJO.LogIn.Response.LogIn;
+import com.tingsic.POJO.SignUp.Request.SignUpRequest;
+import com.tingsic.POJO.SignUp.Response.SignUpResponse;
+import com.tingsic.R;
+import com.tingsic.Utils.PrefManager;
+import com.tingsic.activity.LogInActivity;
+import com.tingsic.activity.MainActivity;
+import com.tingsic.activity.PrivacyPolicy;
+import com.tingsic.activity.SignUpActivity;
 
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Collections;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -105,6 +97,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.app.Activity.RESULT_OK;
+
+//import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class LogInBSFragment extends BottomSheetDialogFragment {
 
@@ -134,7 +128,7 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
             isProfileActivity = getArguments().getBoolean("isProfileActivity", false);
         }
 
-        FacebookSdk.sdkInitialize(getContext());
+
         LoginManager.getInstance().logOut();
 
         dialog = new ProgressDialog(getContext());
@@ -153,13 +147,13 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
                 .build();
 
         //Then we will get the GoogleSignInClient object from GoogleSignIn class
-        mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
+        mGoogleSignInClient = GoogleSignIn.getClient(this.getActivity(), gso);
         mGoogleSignInClient.signOut();
 //                .addOnCompleteListener((Executor) this, new OnCompleteListener<Void>() {
 //                    @Override
 //                    public void onComplete(@NonNull Task<Void> task) {
 //                        // ...
-//                        Log.i(TAG, "onComplete: signout");
+//                        //Log.e(TAG, "onComplete: signout");
 //                    }
 //                });
 
@@ -220,17 +214,16 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
         facebook_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LoginManager.getInstance().logOut();
+
                 //Loginwith_FB();
                 if (!isProfileActivity) {
                     dismiss();
                 }
-                if (getActivity() != null) {
-                    Loginwith_FB();
+                Loginwith_FB();
 //                    Intent intent = new Intent(getActivity(), LoginWithFacebook.class);
 //                    intent.putExtra("isfb",true);
 //                    getActivity().startActivityForResult(intent, LOG_IN);
-                }
+
                 //startActivity(new Intent(getContext(), LoginWithFacebook.class));
             }
         });
@@ -283,7 +276,7 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
         FragmentTransaction ft = fragmentManager.beginTransaction();
 //        ft.add(LogInBSFragment.this, tag);
         ft.commit();
-        Log.e(TAG, "show: ");
+        //Log.e(TAG, "show: ");
     }
 
     public class CustomDialogClass extends Dialog {
@@ -313,7 +306,7 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
                 @Override
                 public void onClick(View v) {
 
-                    Log.e(TAG, "onClick: "+otp.getText().toString());
+                    //Log.e(TAG, "onClick: "+otp.getText().toString());
                     sendotp(otp.getText().toString());
 
 
@@ -342,7 +335,7 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
 
         public void sendotp(String s) {
             dialog.show();
-            Log.e(TAG, "sendotpmessage: "+s);
+            //Log.e(TAG, "sendotpmessage: "+s);
 
             try {
                 Api_Interface apiService =
@@ -356,10 +349,10 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
 
                         dialog.hide();
                         if (response.isSuccessful()) {
-                            Log.e(TAG, "onResponse: ");
-                            Log.e("SenderIDsucc", response.body().getData());
-                            Log.e("SenderIDmess", response.body().getMessage());
-//                        Log.e("SenderID", response.body().getSuccess());
+                            //Log.e(TAG, "onResponse: ");
+                            //Log.e("SenderIDsucc", response.body().getData());
+                            //Log.e("SenderIDmess", response.body().getMessage());
+//                        //Log.e("SenderID", response.body().getSuccess());
                             PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("otp",response.body().getData()).apply();
 //                            customDialogClass=new CustomDialogClass(getActivity());
                             customDialogClass.dismiss();
@@ -367,7 +360,7 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
                             customDialogVerifyClass.show();
                         }
                         else {
-                            Log.e(TAG, "onResponse: ");
+                            //Log.e(TAG, "onResponse: ");
                         }
 
                         //you may add code to automatically fetch OTP from messages.
@@ -375,13 +368,13 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
 
                     @Override
                     public void onFailure(Call<MessageResponse> call, Throwable t) {
-                        Log.e("ERROR", t.toString());
+                        //Log.e("ERROR", t.toString());
                     }
 
                 });
             }
             catch (Exception e){
-                Log.e(TAG, "sendotpexx: "+e.getMessage());
+                //Log.e(TAG, "sendotpexx: "+e.getMessage());
             }
 
         }
@@ -406,7 +399,7 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
             // TODO Auto-generated constructor stub
             this.c = a;
             this.mobile_no = mobile_no;
-            Log.e(TAG, "CustomDialogVerifyClass: ");
+            //Log.e(TAG, "CustomDialogVerifyClass: ");
         }
 
 
@@ -449,17 +442,17 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
 //                 new Response.Listener<String>() {
 //                     @Override
 //                     public void onResponse(String response) {
-//                         Log.e(TAG, "responsetostring: " + response.toString());
+//                         //Log.e(TAG, "responsetostring: " + response.toString());
 //                         try{
 //                             json = new JSONObject(response);
-//                             Log.e(TAG, "onResponse: "+json);
+//                             //Log.e(TAG, "onResponse: "+json);
 //                             if (json.getString("status").equalsIgnoreCase("success"))
 //                             {
 //                                 try {
 //                                     Toast.makeText(getContext(), "OTP Sent Successfully", Toast.LENGTH_SHORT).show();
 //                                 } catch (Exception e)
 //                                 {
-//                                     Log.e(TAG, "onResponse: "+e.getMessage());
+//                                     //Log.e(TAG, "onResponse: "+e.getMessage());
 //                                 }
 //
 //                             } else {
@@ -476,7 +469,7 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
 //                 new Response.ErrorListener() {
 //                     @Override
 //                     public void onErrorResponse(VolleyError error) {
-//                         Log.e(TAG, "onErrorResponse: " + error.getMessage());
+//                         //Log.e(TAG, "onErrorResponse: " + error.getMessage());
 //                     }
 //                 })
 //         {
@@ -570,15 +563,15 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
         signUpCall.enqueue(new Callback<SignUpResponse>() {
             @Override
             public void onResponse(Call<SignUpResponse> call, Response<SignUpResponse> response) {
-                Log.e(TAG, "onResponse: "+response.message());
-//                Log.e(TAG, "onResponse: "+response.body().getMessage());
-                Log.e(TAG, "onResponse: "+response.errorBody());
+                //Log.e(TAG, "onResponse: "+response.message());
+//                //Log.e(TAG, "onResponse: "+response.body().getMessage());
+                //Log.e(TAG, "onResponse: "+response.errorBody());
                 if (response.isSuccessful()){
-                    Log.e(TAG, "onResponsesucc: "+response);
+                    //Log.e(TAG, "onResponsesucc: "+response);
                     customDialogVerifyClass.dismiss();
                     if (response.body().getSuccess() == 1){
-                        Log.e(TAG, "onResponse: "+response.raw().request().url());
-                        Log.e(TAG, "onResponse: "+response.body());
+                        //Log.e(TAG, "onResponse: "+response.raw().request().url());
+                        //Log.e(TAG, "onResponse: "+response.body());
 
                         int id = response.body().getUserId();
                         String token = response.body().getToken();
@@ -602,33 +595,33 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
 
                     }
                     else if (response.body().getSuccess() == 3) {
-                        Log.e(TAG, "onResponse: Error success=3");
+                        //Log.e(TAG, "onResponse: Error success=3");
                         Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
 
                         PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean("isLoggedIn",false).apply();
                     }
                     else if (response.body().getSuccess() == 2) {
-                        Log.e(TAG, "onResponse: Error success=2");
+                        //Log.e(TAG, "onResponse: Error success=2");
                         Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                         PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean("isLoggedIn",false).apply();
                     }
                     else {
                         Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                         PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean("isLoggedIn",false).apply();
-                        Log.e(TAG, "onResponse: Error success=0");
+                        //Log.e(TAG, "onResponse: Error success=0");
                     }
-                    Log.e(TAG, "onResponse: Error success= "+response.body().getSuccess()+" "+response.body().getMessage());
+                    //Log.e(TAG, "onResponse: Error success= "+response.body().getSuccess()+" "+response.body().getMessage());
                 }
                 else {
-                    Log.e(TAG, "onResponseelse: "+response.message());
+                    //Log.e(TAG, "onResponseelse: "+response.message());
                 }
                 dialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<SignUpResponse> call, Throwable t) {
-                Log.e(TAG, "onFailure: "+call);
-                Log.e(TAG, "onFailure: "+t.getMessage());
+                //Log.e(TAG, "onFailure: "+call);
+                //Log.e(TAG, "onFailure: "+t.getMessage());
                 PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean("isLoggedIn",false).apply();
                 dialog.dismiss();
                 Intent intent=new Intent(getContext(),LogInActivity.class);
@@ -640,7 +633,7 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
 
     private void getUserProfile(AccessToken currentAccessToken) {
 
-        Log.i(TAG, "getUserProfile: "+currentAccessToken.getToken());
+        //Log.e(TAG, "getUserProfile: "+currentAccessToken.getToken());
 
         GraphRequest request = GraphRequest.newMeRequest(
                 currentAccessToken,
@@ -675,7 +668,7 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
 
                         }
 
-                        Log.w(LoginWithFacebook.class.getSimpleName(), "onCompleted: "+object.toString());
+                        //Log.e(LoginWithFacebook.class.getSimpleName(), "onCompleted: "+object.toString());
 
 
                     }
@@ -695,29 +688,37 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
     //facebook implimentation
     public void Loginwith_FB() {
 
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        boolean isUserLoggedIn = accessToken != null && !accessToken.isExpired();
+
+        callbackManager = CallbackManager.Factory.create();
+        //Log.e(TAG, "Loginwith_FB: "+isUserLoggedIn);
+        LoginManager.getInstance().logOut();
         LoginManager.getInstance()
                 .logInWithReadPermissions(getActivity(),
-                        Arrays.asList("public_profile", "email"));
-
+                        Collections.singletonList("email"));
+        FacebookSdk.sdkInitialize(getContext());
         // initialze the facebook sdk and request to facebook for login
-
-
+        //Log.e(TAG, "Loginwith_FB: ");
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+                //Log.e(TAG, "onSuccess: "+loginResult.getAccessToken());
                 mAccessToken = loginResult.getAccessToken();
                 getUserProfile(mAccessToken);
+                //Log.e(TAG, "onSuccess: "+mAccessToken.toString());
             }
 
             @Override
             public void onCancel() {
                 // App code
+                //Log.e(TAG, "onCancel: ");
                 Toast.makeText(getActivity(), "Login Cancel", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(FacebookException error) {
-                Log.d("resp", "" + error.toString());
+                //Log.e(TAG, "errorexc" + error.toString());
                 Toast.makeText(getActivity(), "Login Error" + error.toString(), Toast.LENGTH_SHORT).show();
             }
 
@@ -737,28 +738,28 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
 
         dialog.show();
 
-       /* Log.v("AAAAAAAAA", "id=> " + id);
-        Log.v("AAAAAAAAA", "f_name=> " + f_name);
-        Log.v("AAAAAAAAA", "l_name=> " + l_name);
-        Log.v("AAAAAAAAA", "picture=> " + picture);
-        Log.v("AAAAAAAAA", "singnup_type=> " + singnup_type);*/
-        Log.v("AAAAAAAAA", "id=> " + id);
+       /* //Log.e("AAAAAAAAA", "id=> " + id);
+        //Log.e("AAAAAAAAA", "f_name=> " + f_name);
+        //Log.e("AAAAAAAAA", "l_name=> " + l_name);
+        //Log.e("AAAAAAAAA", "picture=> " + picture);
+        //Log.e("AAAAAAAAA", "singnup_type=> " + singnup_type);*/
+        //Log.e("AAAAAAAAA", "id=> " + id);
         LogInRequest service = new LogInRequest();
         Request request = new Request();
         Data data = new Data();
         data.setEmail(id);
         request.setData(data);
-        service.setService("checkexistemail");
+        service.setService("login");
         service.setRequest(request);
 
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<LogIn> logInCall = apiInterface.getLogIn(service);
-        Log.v("AAAAAAAAA","service=> "+new Gson().toJson(service));
-        Log.v("AAAAAAAAA",""+logInCall.request());
+        //Log.e("AAAAAAAAA","service=> "+new Gson().toJson(service));
+        //Log.e("AAAAAAAAA",""+logInCall.request());
         logInCall.enqueue(new Callback<LogIn>() {
             @Override
             public void onResponse(Call<LogIn> call, Response<LogIn> response) {
-                Log.i("AAAAAA", "onResponse: "+response.code());
+                //Log.e("AAAAAA", "onResponse: "+response.code());
                 if (response.isSuccessful()){
                     if (response.body().getSuccess() == 1)
                     {
@@ -814,7 +815,7 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
                               String username,
                               String password,
                               String mobileNumber) {
-        Log.e(TAG, "getSignUpAPI: "+mobileNumber);
+        //Log.e(TAG, "getSignUpAPI: "+mobileNumber);
 
         SignUpRequest service = new SignUpRequest();
 
@@ -847,7 +848,7 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
         signUpCall.enqueue(new Callback<SignUpResponse>() {
             @Override
             public void onResponse(Call<SignUpResponse> call, Response<SignUpResponse> response) {
-                Log.e(TAG, "onResponse: "+response.message());
+                //Log.e(TAG, "onResponse: "+response.message());
                 if (response.isSuccessful()){
                     if (response.body().getSuccess() == 1){
 
@@ -890,10 +891,10 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
                     else {
                         Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                         PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean("isLoggedIn",false).apply();
-                        Log.e(TAG, "onResponse: Error success=0");
+                        //Log.e(TAG, "onResponse: Error success=0");
 
                     }
-                    Log.e(TAG, "onResponse: Error success= "+response.body().getSuccess()+" "+response.body().getMessage());
+                    //Log.e(TAG, "onResponse: Error success= "+response.body().getSuccess()+" "+response.body().getMessage());
                 }
                 dialog.dismiss();
             }
@@ -916,7 +917,7 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
             {
                 MessageDigest md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());
-                Log.e("keyhash" , Base64.encodeToString(md.digest(), Base64.DEFAULT));
+                //Log.e("keyhash" , Base64.encodeToString(md.digest(), Base64.DEFAULT));
             }
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
@@ -929,7 +930,7 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
         // if user is login then this method will call and
         // facebook will return us a token which will user for get the info of user
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        Log.d("resp_token",token.getToken()+"");
+        //Log.e("resp_token",token.getToken()+"");
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
@@ -940,7 +941,7 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
                                 @Override
                                 public void onCompleted(JSONObject user, GraphResponse graphResponse) {
 
-                                    Log.d("resp",user.toString());
+                                    //Log.e("resp",user.toString());
                                     //after get the info of user we will pass to function which will store the info in our server
                                     Call_Api_For_Signup(""+id,""+user.optString("first_name")
                                             ,""+user.optString("last_name"),
@@ -968,6 +969,7 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
 
         //if the requestCode is the Google Sign In code that we defined at starting
@@ -976,10 +978,10 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
             //Getting the GoogleSignIn Task
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                Log.v("Task",""+new Gson().toJson(task));
+                //Log.e("Task",""+new Gson().toJson(task));
                 //Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                Log.v("Account",""+new Gson().toJson(account));
+                //Log.e("Account",""+new Gson().toJson(account));
 
                 //authenticating with firebase
                 firebaseAuthWithGoogle(account);
@@ -994,23 +996,24 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
 //            handleSignInResult(task);
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                Log.e("Task",""+new Gson().toJson(task));
+                //Log.e("Task",""+new Gson().toJson(task));
                 //Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                Log.e("Account",""+new Gson().toJson(account));
+                //Log.e("Account",""+new Gson().toJson(account));
 
                 //authenticating with firebase
                 firebaseAuthWithGoogle(account);
                 handleSignInResult(task);
             } catch (ApiException e) {
                 Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                //Log.e(TAG, "onActivityResultexc: "+e.getMessage());
             }
         }
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d("Google ID", "firebaseAuthWithGoogle:" + acct.getId());
-        Log.d("Google ID", "firebaseAuthWithGoogle:" + acct.getId());
+        //Log.e("Google ID", "firebaseAuthWithGoogle:" + acct.getId());
+        //Log.e("Google ID", "firebaseAuthWithGoogle:" + acct.getId());
 
         //getting the auth credential
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
@@ -1021,7 +1024,7 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Log.d("Success", "signInWithCredential:success");
+                            //Log.e("Success", "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
 
                         } else {
@@ -1044,12 +1047,12 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
                                     String picture,
                                     String singnup_type) {
 
-       /* Log.v("AAAAAAAAA", "id=> " + id);
-        Log.v("AAAAAAAAA", "f_name=> " + f_name);
-        Log.v("AAAAAAAAA", "l_name=> " + l_name);
-        Log.v("AAAAAAAAA", "picture=> " + picture);
-        Log.v("AAAAAAAAA", "singnup_type=> " + singnup_type);*/
-        Log.v("AAAAAAAAA", "id=> " + id);
+       /* //Log.e("AAAAAAAAA", "id=> " + id);
+        //Log.e("AAAAAAAAA", "f_name=> " + f_name);
+        //Log.e("AAAAAAAAA", "l_name=> " + l_name);
+        //Log.e("AAAAAAAAA", "picture=> " + picture);
+        //Log.e("AAAAAAAAA", "singnup_type=> " + singnup_type);*/
+        //Log.e("AAAAAAAAA", "id=> " + id);
         LogInRequest service = new LogInRequest();
         Request request = new Request();
         Data data = new Data();
@@ -1060,12 +1063,12 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
 
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<LogIn> logInCall = apiInterface.getLogIn(service);
-        Log.v("AAAAAAAAA","service=> "+new Gson().toJson(service));
-        Log.v("AAAAAAAAA",""+logInCall.request());
+        //Log.e("AAAAAAAAA","service=> "+new Gson().toJson(service));
+        //Log.e("AAAAAAAAA",""+logInCall.request());
         logInCall.enqueue(new Callback<LogIn>() {
             @Override
             public void onResponse(Call<LogIn> call, Response<LogIn> response) {
-                Log.i("AAAAAA", "onResponse: "+response.code());
+                //Log.e("AAAAAA", "onResponse: "+response.code());
                 if (response.isSuccessful()){
                     if (response.body().getSuccess() == 1)
                     {
@@ -1127,11 +1130,11 @@ public class LogInBSFragment extends BottomSheetDialogFragment {
     private void onLoggedIn(GoogleSignInAccount account) {
 
         if (account != null) {
-            Log.d(TAG, "onLoggedIn() returned: " + account.getDisplayName() );
-            Log.d(TAG, "onLoggedIn() returned: " + account.getEmail() );
-            Log.d(TAG, "onLoggedIn() returned: " + account.getIdToken() );
-            Log.d(TAG, "onLoggedIn() returned: " + account.getPhotoUrl() );
-            Log.d(TAG, "onLoggedIn() returned: " + account.getId() );
+            //Log.e(TAG, "onLoggedIn() returned: " + account.getDisplayName() );
+            //Log.e(TAG, "onLoggedIn() returned: " + account.getEmail() );
+            //Log.e(TAG, "onLoggedIn() returned: " + account.getIdToken() );
+            //Log.e(TAG, "onLoggedIn() returned: " + account.getPhotoUrl() );
+            //Log.e(TAG, "onLoggedIn() returned: " + account.getId() );
 
             String fname,lname;
             try {

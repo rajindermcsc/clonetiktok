@@ -178,7 +178,7 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
     }
 
     public static boolean backPress() {
-        Log.i(TAG, "backPress");
+        //Log.e(TAG, "backPress");
         if ((System.currentTimeMillis() - CLICK_QUIT_FULLSCREEN_TIME) < FULL_SCREEN_NORMAL_DELAY)
             return false;
 
@@ -292,14 +292,14 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
                     if (JzvdMgr.getCurrentJzvd().currentState == Jzvd.CURRENT_STATE_PAUSE) {
                         Jzvd.releaseAllVideos();
                     } else {
-                        Log.e(TAG, "onScroll: out screen");
+                        //Log.e(TAG, "onScroll: out screen");
                         JzvdMgr.getCurrentJzvd().startWindowTiny();
                     }
                 }
             } else {
                 if (JzvdMgr.getCurrentJzvd() != null &&
                         JzvdMgr.getCurrentJzvd().currentScreen == Jzvd.SCREEN_WINDOW_TINY) {
-                    Log.e(TAG, "onScroll: into screen");
+                    //Log.e(TAG, "onScroll: into screen");
                     Jzvd.backPress();
                 }
             }
@@ -309,7 +309,7 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
     public static void onScrollReleaseAllVideos(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         int lastVisibleItem = firstVisibleItem + visibleItemCount;
         int currentPlayPosition = JZMediaManager.instance().positionInList;
-        Log.e(TAG, "onScrollReleaseAllVideos: " +
+        //Log.e(TAG, "onScrollReleaseAllVideos: " +
                 currentPlayPosition + " " + firstVisibleItem + " " + currentPlayPosition + " " + lastVisibleItem);
         if (currentPlayPosition >= 0) {
             if ((currentPlayPosition < firstVisibleItem || currentPlayPosition > (lastVisibleItem - 1))) {
@@ -432,7 +432,7 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.start) {
-            Log.i(TAG, "onClick start [" + this.hashCode() + "] ");
+            //Log.e(TAG, "onClick start [" + this.hashCode() + "] ");
             if (jzDataSource.urlsMap.isEmpty() || jzDataSource.getCurrentUrl() == null) {
                 Toast.makeText(getContext(), getResources().getString(R.string.no_url), Toast.LENGTH_SHORT).show();
                 return;
@@ -460,7 +460,7 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
                 startVideo();
             }
         } else if (i == R.id.fullscreen) {
-            Log.i(TAG, "onClick fullscreen [" + this.hashCode() + "] ");
+            //Log.e(TAG, "onClick fullscreen [" + this.hashCode() + "] ");
             if (currentState == CURRENT_STATE_AUTO_COMPLETE) return;
             if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
                 //quit fullscreen
@@ -481,7 +481,7 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
         if (id == R.id.surface_container) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    Log.i(TAG, "onTouch surfaceContainer actionDown [" + this.hashCode() + "] ");
+                    //Log.e(TAG, "onTouch surfaceContainer actionDown [" + this.hashCode() + "] ");
                     mTouchingProgressBar = true;
 
                     mDownX = x;
@@ -491,7 +491,7 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
                     mChangeBrightness = false;
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    Log.i(TAG, "onTouch surfaceContainer actionMove [" + this.hashCode() + "] ");
+                    //Log.e(TAG, "onTouch surfaceContainer actionMove [" + this.hashCode() + "] ");
                     float deltaX = x - mDownX;
                     float deltaY = y - mDownY;
                     float absDeltaX = Math.abs(deltaX);
@@ -515,13 +515,13 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
                                         if (lp.screenBrightness < 0) {
                                             try {
                                                 mGestureDownBrightness = Settings.System.getInt(getContext().getContentResolver(), Settings.System.SCREEN_BRIGHTNESS);
-                                                Log.i(TAG, "current system brightness: " + mGestureDownBrightness);
+                                                //Log.e(TAG, "current system brightness: " + mGestureDownBrightness);
                                             } catch (Settings.SettingNotFoundException e) {
                                                 e.printStackTrace();
                                             }
                                         } else {
                                             mGestureDownBrightness = lp.screenBrightness * 255;
-                                            Log.i(TAG, "current activity brightness: " + mGestureDownBrightness);
+                                            //Log.e(TAG, "current activity brightness: " + mGestureDownBrightness);
                                         }
                                     } else {//右侧改变声音
                                         mChangeVolume = true;
@@ -570,7 +570,7 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
                     }
                     break;
                 case MotionEvent.ACTION_UP:
-                    Log.i(TAG, "onTouch surfaceContainer actionUp [" + this.hashCode() + "] ");
+                    //Log.e(TAG, "onTouch surfaceContainer actionUp [" + this.hashCode() + "] ");
                     mTouchingProgressBar = false;
                     dismissProgressDialog();
                     dismissVolumeDialog();
@@ -608,7 +608,7 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
     }
 
     public void onPrepared() {
-        Log.i(TAG, "onPrepared " + " [" + this.hashCode() + "] ");
+        //Log.e(TAG, "onPrepared " + " [" + this.hashCode() + "] ");
         onStatePrepared();
         onStatePlaying();
     }
@@ -644,13 +644,13 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
     }
 
     public void onStateNormal() {
-        Log.i(TAG, "onStateNormal " + " [" + this.hashCode() + "] ");
+        //Log.e(TAG, "onStateNormal " + " [" + this.hashCode() + "] ");
         currentState = CURRENT_STATE_NORMAL;
         cancelProgressTimer();
     }
 
     public void onStatePreparing() {
-        Log.i(TAG, "onStatePreparing " + " [" + this.hashCode() + "] ");
+        //Log.e(TAG, "onStatePreparing " + " [" + this.hashCode() + "] ");
         currentState = CURRENT_STATE_PREPARING;
         resetProgressAndTime();
     }
@@ -691,25 +691,25 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
     }
 
     public void onStatePlaying() {
-        Log.i(TAG, "onStatePlaying " + " [" + this.hashCode() + "] ");
+        //Log.e(TAG, "onStatePlaying " + " [" + this.hashCode() + "] ");
         currentState = CURRENT_STATE_PLAYING;
         startProgressTimer();
     }
 
     public void onStatePause() {
-        Log.i(TAG, "onStatePause " + " [" + this.hashCode() + "] ");
+        //Log.e(TAG, "onStatePause " + " [" + this.hashCode() + "] ");
         currentState = CURRENT_STATE_PAUSE;
         startProgressTimer();
     }
 
     public void onStateError() {
-        Log.i(TAG, "onStateError " + " [" + this.hashCode() + "] ");
+        //Log.e(TAG, "onStateError " + " [" + this.hashCode() + "] ");
         currentState = CURRENT_STATE_ERROR;
         cancelProgressTimer();
     }
 
     public void onStateAutoComplete() {
-        Log.i(TAG, "onStateAutoComplete " + " [" + this.hashCode() + "] ");
+        //Log.e(TAG, "onStateAutoComplete " + " [" + this.hashCode() + "] ");
         currentState = CURRENT_STATE_AUTO_COMPLETE;
         cancelProgressTimer();
         progressBar.setProgress(100);
@@ -721,7 +721,7 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
     }
 
     public void onError(int what, int extra) {
-        Log.e(TAG, "onError " + what + " - " + extra + " [" + this.hashCode() + "] ");
+        //Log.e(TAG, "onError " + what + " - " + extra + " [" + this.hashCode() + "] ");
         if (what != 38 && extra != -38 && what != -38 && extra != 38 && extra != -19) {
             onStateError();
             if (isCurrentPlay()) {

@@ -40,7 +40,7 @@ public class Insertneeuser_inSqliteDatabase
                 curuser.moveToFirst();
                 do {
                     String userloginid = curuser.getString(curuser.getColumnIndex("user"));
-                    Log.e(TAG, "savedata_tosqlite: " + userloginid);
+                    //Log.e(TAG, "savedata_tosqlite: " + userloginid);
                     if (userloginid.equalsIgnoreCase(sharedPreferences.getString(Myconstant.USER_LOGINID, "")))
                     {
                         userexist=false;
@@ -49,19 +49,19 @@ public class Insertneeuser_inSqliteDatabase
             }
             else
             {
-                Log.e(TAG, "new data inserted"+sharedPreferences.getString(Myconstant.USER_LOGINID,""));
+                //Log.e(TAG, "new data inserted"+sharedPreferences.getString(Myconstant.USER_LOGINID,""));
                 userexist=false;
                 dbHelper.insertUser(sharedPreferences.getString(Myconstant.USER_LOGINID,""));
 
             }
             if (userexist)
             {
-                Log.e(TAG, "new data inserted"+sharedPreferences.getString(Myconstant.USER_LOGINID,""));
+                //Log.e(TAG, "new data inserted"+sharedPreferences.getString(Myconstant.USER_LOGINID,""));
                 dbHelper.insertUser(sharedPreferences.getString(Myconstant.USER_LOGINID,""));
                 userexist=false;
             }
             dbHelper.close();
-            Log.e(TAG, "run: "+curuser.getCount());
+            //Log.e(TAG, "run: "+curuser.getCount());
         } catch (Exception e) {
             e.printStackTrace();
         }

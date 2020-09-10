@@ -94,7 +94,7 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         Hide_navigation();
         setContentView(R.layout.activity_video_recoder);
-        Log.e("TAG", "onCreate: "+Variables.root);
+        //Log.e("TAG", "onCreate: "+Variables.root);
 
         initView();
     }
@@ -318,7 +318,7 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
 
     // this will apped all the videos parts in one  fullvideo
     private boolean append() {
-        Log.e("TAG", "append: "+videopaths.toString());
+        //Log.e("TAG", "append: "+videopaths.toString());
         final ProgressDialog progressDialog = new ProgressDialog(VideoRecorderActivity.this);
         new Thread(new Runnable() {
             @Override
@@ -357,7 +357,7 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
                     Movie[] inMovies = new Movie[video_list.size()];
 
                     for (int i = 0; i < video_list.size(); i++) {
-                        Log.e("resp", videopaths.get(0));
+                        //Log.e("resp", videopaths.get(0));
                         inMovies[i] = MovieCreator.build(video_list.get(i));
                     }
 
@@ -410,7 +410,7 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Log.e("TAG", "runex: "+e.getMessage());
+                    //Log.e("TAG", "runex: "+e.getMessage());
                 }
             }
         }).start();
@@ -421,7 +421,7 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
 
     private boolean append_() {
 
-        Log.e("TAG", "append: "+videopaths.toString());
+        //Log.e("TAG", "append: "+videopaths.toString());
         final ProgressDialog progressDialog = new ProgressDialog(VideoRecorderActivity.this);
         new Thread(new Runnable() {
             @Override
@@ -460,7 +460,7 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
                     Movie[] inMovies = new Movie[video_list.size()];
 
                     for (int i = 0; i < video_list.size(); i++) {
-                        Log.e("resp", videopaths.get(0));
+                        //Log.e("resp", videopaths.get(0));
                         inMovies[i] = MovieCreator.build(video_list.get(i));
                     }
 
@@ -513,14 +513,14 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Log.e("TAG", "runex: "+e.getMessage());
+                    //Log.e("TAG", "runex: "+e.getMessage());
                 }
             }
         }).start();
 
 
         return true;
-//        Log.e("TAG", "append: "+videopaths.toString());
+//        //Log.e("TAG", "append: "+videopaths.toString());
 //        final ProgressDialog progressDialog = new ProgressDialog(VideoRecorderActivity.this);
 //        new Thread(new Runnable() {
 //            @Override
@@ -541,7 +541,7 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
 //                File file = new File(videopaths.get(0));
 //
 //                    if (file.length() > 3000) {
-//                        Log.e("resp", videopaths.get(0));
+//                        //Log.e("resp", videopaths.get(0));
 //                        video_list.add(videopaths.get(0));
 //                    }
 //
@@ -586,7 +586,7 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
 //
 //                } catch (Exception e) {
 //                    e.printStackTrace();
-//                    Log.e("TAG", "runexx: "+e.getMessage());
+//                    //Log.e("TAG", "runexx: "+e.getMessage());
 //                }
 //            }
 //        }).start();
@@ -673,7 +673,7 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.e("TAGVideo", "onActivityResult: "+requestCode);
+        //Log.e("TAGVideo", "onActivityResult: "+requestCode);
         if (requestCode == Sounds_list_Request_code) {
             if (data != null) {
 
@@ -688,7 +688,7 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
         }
         if (requestCode == 260) {
             if (resultCode == RESULT_OK) {
-                Log.e("TAGVideo", "onActivityResult@: "+requestCode);
+                //Log.e("TAGVideo", "onActivityResult@: "+requestCode);
                 Intent intent = new Intent();
                 intent.putExtra("video_path", data.getStringExtra("video_path"));
                 setResult(RESULT_OK, intent);
@@ -703,7 +703,7 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
 //            videopaths.add((videoPath));
 //            append_();
 //            Log.i("TAG", "onActivityResult: Videouri: " + videoUri.toString());
-//            Log.e("TAG", "onActivityResult: code req res " + requestCode + resultCode);
+//            //Log.e("TAG", "onActivityResult: code req res " + requestCode + resultCode);
 //            Log.i("TAG", "onActivityResult: " + videoPath);
 //
 //            Log.i("TAG", "onActivityResult: Size " + getFileSize(videoUri) + " Bytes");
@@ -728,7 +728,7 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
 //
 //                    imagePath = thumbfile.getPath();
 //                }
-//                Log.e("TAG", "onActivityResult: Image Path " + imagePath);
+//                //Log.e("TAG", "onActivityResult: Image Path " + imagePath);
 //            } catch (FileNotFoundException e) {
 //                e.printStackTrace();
 //            }
@@ -737,7 +737,7 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
 //                this.imagePath = getThumbnailPathForLocalFile(videoUri);
 //            }
 //
-//            Log.e("TAG", "onActivityResult: thumbPsth: " + imagePath);
+//            //Log.e("TAG", "onActivityResult: thumbPsth: " + imagePath);
 //
 //            ivVideoThumnb.setVisibility(View.VISIBLE);
 //            ivVideoThumnb.setClickable(false);
@@ -904,7 +904,7 @@ public class VideoRecorderActivity extends AppCompatActivity implements View.OnC
 
 
     public void Go_To_preview_Activity(String captured, String videoPath) {
-        Log.e("TAG", "Go_To_preview_Activity: "+videoPath);
+        //Log.e("TAG", "Go_To_preview_Activity: "+videoPath);
 
         if (captured.equalsIgnoreCase("captured")) {
             Intent intent = new Intent(this, PreviewVideoActivity.class);

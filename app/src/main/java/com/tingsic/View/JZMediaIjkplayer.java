@@ -158,7 +158,7 @@ public class JZMediaIjkplayer/* extends JZMediaInterface implements IMediaPlayer
     @Override
     public boolean onInfo(IMediaPlayer iMediaPlayer, final int what, final int extra) {
         if (what == IMediaPlayer.MEDIA_INFO_BUFFERING_START){
-            Log.i("JZMediaPlayer", "onInfo: Buffer started.");
+            //Log.e("JZMediaPlayer", "onInfo: Buffer started.");
         }
         if (what == IMediaPlayer.MEDIA_INFO_BUFFERING_END){
             Log.i("JZMediaPlayer", "onInfo: Buffer end.");

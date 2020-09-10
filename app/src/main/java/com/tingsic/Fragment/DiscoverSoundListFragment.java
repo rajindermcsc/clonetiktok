@@ -122,7 +122,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
             @Override
             public void onItemClick(View view,int postion, Sound item) {
 
-                Log.d("resp",item.acc_path);
+                //Log.e("resp",item.acc_path);
 
                 if(view.getId()==R.id.done){
                     StopPlaying();
@@ -175,7 +175,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
         call.enqueue(new Callback<JsonElement>() {
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
-                Log.i("TAG", "onResponse: "+response.body().toString());
+                Log.e("TAG", "onResponse: "+response.body().toString());
                 Parse_data(response.body().toString());
             }
 
@@ -237,7 +237,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
                 for(int i=msgArray.length()-1;i>=0;i--) {
                     JSONObject object=msgArray.getJSONObject(i);
 
-                    Log.d("resp",object.toString());
+                    //Log.e("resp",object.toString());
 
                     JSONArray section_array=object.optJSONArray("sections_sounds");
 
@@ -255,8 +255,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
                         //fixme try aac
                         //item.acc_path = "http://mirrors.standaloneinstaller.com/audio-sample/aac/in.aac";
                         item.acc_path = audio_path.optString("acc");
-
-
+                        Log.e("TAG", "Parse_data: "+item.acc_path);
                         item.sound_name = itemdata.optString("sound_name");
                         item.description = itemdata.optString("description");
                         item.section = itemdata.optString("section");

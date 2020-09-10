@@ -149,7 +149,7 @@ public class ContestVideoFragment extends Fragment implements RecyclerView.OnChi
 //                }
 //            }
 //        });
-        Log.i(TAG, "onCreateView: CAlled");
+        //Log.e(TAG, "onCreateView: CAlled");
         return view;
     }
 
@@ -177,7 +177,7 @@ public class ContestVideoFragment extends Fragment implements RecyclerView.OnChi
         MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(Uri.parse(VIDEO_BASE_URL + item.getVideoUrl()));
 
-        Log.d("resp", VIDEO_BASE_URL + item.getVideoUrl());
+        //Log.e("resp", VIDEO_BASE_URL + item.getVideoUrl());
 
 
         player.prepare(videoSource);
@@ -300,7 +300,7 @@ public class ContestVideoFragment extends Fragment implements RecyclerView.OnChi
                 if (page == 1) {
                     loadingView.setVisibility(View.GONE);
                 }
-                Log.i(TAG, "onResponse: " + response.code());
+                //Log.e(TAG, "onResponse: " + response.code());
                 if (response.isSuccessful()) {
                     if (response.body().getSuccess() == 1) {
                         videos.addAll(response.body().getData());
@@ -311,9 +311,9 @@ public class ContestVideoFragment extends Fragment implements RecyclerView.OnChi
                             intent.putExtra("isLoading", false);
                             LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
                         }
-                        Log.i(TAG, "onResponse: " + videos.size());
+                        //Log.e(TAG, "onResponse: " + videos.size());
                     } else {
-                        Log.e(TAG, "onResponse: no success");
+                        //Log.e(TAG, "onResponse: no success");
                         if (page != 1) {
                             Intent intent = new Intent("load_more");
                             intent.putExtra("isLoading", false);
@@ -337,7 +337,7 @@ public class ContestVideoFragment extends Fragment implements RecyclerView.OnChi
                     intent.putExtra("isLoading", false);
                     LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
                 }
-                Log.e(TAG, "onFailure: " + t.getMessage() + " " + t.toString());
+                //Log.e(TAG, "onFailure: " + t.getMessage() + " " + t.toString());
             }
         });
     }
@@ -354,7 +354,7 @@ public class ContestVideoFragment extends Fragment implements RecyclerView.OnChi
         String contestId = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("contest_id", "1");
 
         if (id == -111 || token.equals("null")) {
-            Log.i(TAG, "addVideoAPI: returned");
+            //Log.e(TAG, "addVideoAPI: returned");
             return;
         }
 
@@ -441,7 +441,7 @@ public class ContestVideoFragment extends Fragment implements RecyclerView.OnChi
 
     @Override
     public void onLoadMore() {
-        Log.e(TAG, "onLoadMore: TRUE");
+        //Log.e(TAG, "onLoadMore: TRUE");
         Intent intent = new Intent("load_more");
         intent.putExtra("isLoading", true);
         LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);

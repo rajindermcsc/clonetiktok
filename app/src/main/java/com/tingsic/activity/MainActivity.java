@@ -22,6 +22,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
@@ -29,12 +30,28 @@ import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.tingsic.API.ApiClient;
+import com.tingsic.API.ApiInterface;
 import com.tingsic.FourChamp;
 import com.tingsic.Fragment.LogInBSFragment;
+import com.tingsic.NotificationService;
+import com.tingsic.POJO.Banner.Banner;
+import com.tingsic.POJO.Banner.Request.BannerRequest;
+import com.tingsic.POJO.Banner.Request.Data;
+import com.tingsic.POJO.Banner.Request.Request;
+import com.tingsic.POJO.Banner.Response.BannerResponse;
 import com.tingsic.R;
 import com.tingsic.Utils.DisplayHelper;
+import com.tingsic.Utils.PrefManager;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends TabActivity implements TabHost.OnTabChangeListener {
 
@@ -42,11 +59,18 @@ public class MainActivity extends TabActivity implements TabHost.OnTabChangeList
     private AnimationDrawable drawable;
     private static final int WRITE_PERMISSION = 372;
     private static int CAMERA = 101;
+    Intent intent;
+    String token;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        intent=getIntent();
+        token=intent.getStringExtra("token");
+        Log.e(TAG, "onCreate: "+token);
 
         final int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -71,6 +95,87 @@ public class MainActivity extends TabActivity implements TabHost.OnTabChangeList
         LocalBroadcastManager.getInstance(this).registerReceiver(tabColorReceiver, new IntentFilter("change_color_of_tab"));
         LocalBroadcastManager.getInstance(this).registerReceiver(videoLoaderReceiver, new IntentFilter("load_more"));
     }
+
+
+    private void getBannerAPI() {
+
+//        loadingView.setVisibility(View.VISIBLE);
+
+//        String token = NotificationService.getToken(this);
+//        if (token.equals("null")) {
+//            FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+//                @Override
+//                public void onComplete(@NonNull Task<InstanceIdResult> task) {
+//                    if (task.isSuccessful()) {
+//                        if (task.getResult() != null) {
+//                            NotificationService.saveToken(MainActivity.this,task.getResult().getToken());
+//                        }
+//                    }
+//                }
+//            });
+//
+//            token = NotificationService.getToken(this);
+//        }
+//
+//        //Log.e(TAG, "getBannerAPI: "+token);
+
+        BannerRequest bannerRequest = new BannerRequest();
+
+        Request request = new Request();
+
+        Data data = new Data();
+        data.setDeviceId(token);
+        data.setPlatform("android");
+
+        request.setData(data);
+
+        bannerRequest.setRequest(request);
+        bannerRequest.setService("getBanner");
+
+        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        Call<BannerResponse> responseCall = apiInterface.getBanner(bannerRequest);
+        responseCall.enqueue(new Callback<BannerResponse>() {
+            @Override
+            public void onResponse(Call<BannerResponse> call, Response<BannerResponse> response) {
+                if (response.isSuccessful()) {
+                    Log.e(TAG, "onResponse: "+response.raw().request().url());
+                    Log.e(TAG, "onResponse: "+response.message());
+                    if (response.body().getSuccess() == 1) {
+
+
+                        PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString("contest_id",response.body().getContestOpen().getId()).apply();
+
+                        PrefManager.setPaidContest(MainActivity.this,response.body().getContestOpen().getPayType().equals("1"));
+
+                        PrefManager.setPayAmount(MainActivity.this,response.body().getContestOpen().getPoint());
+
+
+
+                        boolean isLiveVideo = getIntent().getBooleanExtra("live_noti",false);
+                        if (isLiveVideo) {
+                            String data = getIntent().getStringExtra("data");
+
+                            Intent intent = new Intent(MainActivity.this,MainActivity.class);
+                            intent.putExtra("video",data);
+                            intent.putExtra("shared",true);
+                            startActivity(intent);
+                            finish();
+
+                        }
+
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<BannerResponse> call, Throwable t) {
+
+            }
+        });
+
+    }
+
 
     private void initView() {
 
@@ -338,6 +443,7 @@ public class MainActivity extends TabActivity implements TabHost.OnTabChangeList
 
         Log.i(TAG, "onResume: true");
 
+        getBannerAPI();
         FourChamp.setIsParentResumed(true);
 
         super.onResume();

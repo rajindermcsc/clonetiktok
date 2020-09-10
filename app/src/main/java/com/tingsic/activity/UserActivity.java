@@ -4,6 +4,8 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -26,7 +28,7 @@ public class UserActivity extends AppCompatActivity implements OnVideoListener, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
 
-
+        Log.e("TAG", "onCreate: haan haige");
         String userId = getIntent().getStringExtra("userId");
 
         UserFragment userFragment = new UserFragment();

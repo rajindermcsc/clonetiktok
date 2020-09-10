@@ -375,7 +375,7 @@ public class UpdateProfileActivity extends AppCompatActivity implements ImageUpl
                         finish();
 
                     } else {
-                        Log.e(TAG, response.body().getMessage());
+                        //Log.e(TAG, response.body().getMessage());
                     }
                 } else {
                     try {
@@ -482,7 +482,7 @@ public class UpdateProfileActivity extends AppCompatActivity implements ImageUpl
         String instaUrl = etInsta.getText().toString().trim();
         String youtubrUrl = etYoutube.getText().toString().trim();
 
-        Log.i(TAG, "updateProfile: " + bio);
+        //Log.e(TAG, "updateProfile: " + bio);
         if (imageData != null) {
             updateProfileAPI(username, fname, lname, bio, instaUrl, youtubrUrl, imageData);
         } else {

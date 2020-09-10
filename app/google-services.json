@@ -1,42 +1,34 @@
 {
   "project_info": {
-    "project_number": "886520387758",
-    "firebase_url": "https://tingsic-31cb0.firebaseio.com",
-    "project_id": "tingsic-31cb0",
-    "storage_bucket": "tingsic-31cb0.appspot.com"
+    "project_number": "1028698514379",
+    "firebase_url": "https://tingsic.firebaseio.com",
+    "project_id": "tingsic",
+    "storage_bucket": "tingsic.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:886520387758:android:e8b5ecd88ac935a50df53f",
+        "mobilesdk_app_id": "1:1028698514379:android:d33f83480423e2c5190c4e",
         "android_client_info": {
           "package_name": "com.tingsic"
         }
       },
       "oauth_client": [
         {
-          "client_id": "886520387758-an6i39qdo2hni2ktcfdne8akk8074rqf.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.tingsic",
-            "certificate_hash": "478e984b00046fe3f876c0c1ee64506abdfebcbd"
-          }
-        },
-        {
-          "client_id": "886520387758-k59g60bnrc1oi9fsmiggt4lfpbliboi4.apps.googleusercontent.com",
+          "client_id": "1028698514379-aqldrrrj1ob2ao3r3ld4je4008kte6mj.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBe9VidYVxMCvPqWDgFPfS7LTwf-VX-uq4"
+          "current_key": "AIzaSyB_Q8Ng-YkLfQw1251366bPBOh9wiROGc0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "886520387758-k59g60bnrc1oi9fsmiggt4lfpbliboi4.apps.googleusercontent.com",
+              "client_id": "1028698514379-aqldrrrj1ob2ao3r3ld4je4008kte6mj.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

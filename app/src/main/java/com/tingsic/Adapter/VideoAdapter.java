@@ -228,7 +228,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(Uri.parse(VIDEO_BASE_URL + item.getVideoUrl()));
 
-        Log.e("resp", VIDEO_BASE_URL + item.getVideoUrl());
+        //Log.e("resp", VIDEO_BASE_URL + item.getVideoUrl());
 
 
         player.prepare(videoSource);
@@ -579,7 +579,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         downloadM.setRefId(refid);
         downloadM.setFileName(VideoAdapter.this.filename);
 
-        Log.e("OUTbtnDownload", "" + refid + " " + filename[filename.length - 1]);
+        //Log.e("OUTbtnDownload", "" + refid + " " + filename[filename.length - 1]);
 
         list.add(refid);
         mlist.add(downloadM);
@@ -646,7 +646,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     @Override
                     public void onProgress(double progress) {
 
-                        Log.e("resp", "" + (int) (progress * 100));
+                        //Log.e("resp", "" + (int) (progress * 100));
                         // Functions.Show_loading_progress((int)((progress*100)/2)+50);
 
                     }
@@ -663,13 +663,13 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                     @Override
                     public void onCanceled() {
-                        Log.e("resp", "onCanceled");
+                        //Log.e("resp", "onCanceled");
                     }
 
                     @Override
                     public void onFailed(Exception exception) {
 
-                        Log.e("resp", exception.toString());
+                        //Log.e("resp", exception.toString());
 
                         try {
 
@@ -722,7 +722,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             int likeCount = androidLikeButton.getCount();
             likeCount = likeCount + 1;
             androidLikeButton.setCount(likeCount);
-            Log.e(TAG, "onLikeClicked: "+androidLikeButton.getPositon());
+            //Log.e(TAG, "onLikeClicked: "+androidLikeButton.getPositon());
             addLikeAPI(androidLikeButton.getPositon());
         } else {
             androidLikeButton.performClick();
@@ -744,7 +744,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             List<String> list = new ArrayList<>(Arrays.asList(ids));
             list.remove(videos.get(androidLikeButton.getPositon()).getVid());
             ids = list.toArray(new String[]{});
-            Log.e("Straing", "onUnlikeClicked: " + stringArrayToString(ids));
+            //Log.e("Straing", "onUnlikeClicked: " + stringArrayToString(ids));
             writeToFile(stringArrayToString(ids), context);
 
         }
@@ -801,18 +801,17 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             likeButton = itemView.findViewById(R.id.likeButton);
             tvVideoDescription = itemView.findViewById(R.id.tv_video_description);
-            tvShare.setVisibility(View.GONE);
 
             tvComment.setOnClickListener(this);
             tvShare.setOnClickListener(this);
             ivUser.setOnClickListener(this);
             btnadd.setOnClickListener(this);
             if (isUserLoggedIn()){
-                Log.e("TAG", "onCreateView: ");
+                //Log.e("TAG", "onCreateView: ");
                 btnadd.setVisibility(View.VISIBLE);
             }
             else {
-                Log.e("TAG", "onCreateView@: ");
+                //Log.e("TAG", "onCreateView@: ");
                 btnadd.setVisibility(View.GONE);
             }
 
@@ -1011,7 +1010,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         likeRequest.setAuth(auth);
         likeRequest.setRequest(request);
         likeRequest.setService("SaveLikes");
-        Log.e(TAG, "addLikeAPI: ");
+        //Log.e(TAG, "addLikeAPI: ");
 
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<LikenShareResponse> responseCall = apiInterface.addLike(likeRequest);
@@ -1021,12 +1020,12 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 if (response.isSuccessful()) {
                     if (response.body().getSuccess() == 1) {
                         String[] ids = readFromFile(context).split(",");
-                        Log.e("IDS", "onResponse: " + stringArrayToString(ids));
+                        //Log.e("IDS", "onResponse: " + stringArrayToString(ids));
                         List<String> list = new ArrayList<>(Arrays.asList(ids));
                         list.add(videos.get(pos).getVid());
                         Set<String> stringSet = new HashSet<>(list);
                         ids = stringSet.toArray(new String[]{});
-                        Log.e("Straing", "onResponse: " + stringArrayToString(ids));
+                        //Log.e("Straing", "onResponse: " + stringArrayToString(ids));
                         writeToFile(stringArrayToString(ids), context);
                     }
                 }
@@ -1063,7 +1062,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         responseCall.enqueue(new Callback<LikenShareResponse>() {
             @Override
             public void onResponse(Call<LikenShareResponse> call, Response<LikenShareResponse> response) {
-                Log.e("VideoAdapter", "onResponse: " + response.code());
+                //Log.e("VideoAdapter", "onResponse: " + response.code());
                 if (response.isSuccessful()) {
                     if (response.body().getSuccess() == 1) {
                         int share = Integer.parseInt(videos.get(pos).getTotalShare());
@@ -1082,17 +1081,17 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     private void initBranch(final int position) {
-        Log.e(TAG, "initBranch: "+position);
+        //Log.e(TAG, "initBranch: "+position);
 
         //todo change desktop url
 
         Video video = videos.get(position);
 
         String vUrl = video.getVideoUrl();
-        Log.e(TAG, "initBranch: "+vUrl);
+        //Log.e(TAG, "initBranch: "+vUrl);
         video.setVideoUrl(vUrl);
         String url = video.getThumbUrl();
-        Log.e(TAG, "initBranch: "+vUrl);
+        //Log.e(TAG, "initBranch: "+vUrl);
         video.setThumbUrl(url);
 
         Gson gson = new Gson();
@@ -1100,7 +1099,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         String title = video.getContestTitle();
 
-        Log.e("ShareJson", "Json Object: " + json);
+        //Log.e("ShareJson", "Json Object: " + json);
         BranchUniversalObject buo = new BranchUniversalObject()
                 .setCanonicalIdentifier("content/12345")
                 .setTitle("Tingsic")
@@ -1149,13 +1148,13 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             @Override
             public void onLinkShareResponse(String sharedLink, String sharedChannel, BranchError error) {
-                Log.e("Branch", "onLinkShareResponse: SharingLink: " + sharedLink);
+                //Log.e("Branch", "onLinkShareResponse: SharingLink: " + sharedLink);
             }
 
             @Override
             public void onChannelSelected(String channelName) {
 
-                Log.e("Branch", "onChannelSelected: " + channelName);
+                //Log.e("Branch", "onChannelSelected: " + channelName);
                 getShareAPI(position);
 
             }
@@ -1170,7 +1169,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             stream.close();
         } catch (IOException e) {
             e.printStackTrace();
-            Log.e("VideoAdapter", "writeToFile: failed");
+            //Log.e("VideoAdapter", "writeToFile: failed");
         }
     }
 
@@ -1218,7 +1217,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         @Override
         public void onReceive(Context context, Intent intent) {
             long refrenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-            Log.e("INrefrenceId", "" + refrenceId);
+            //Log.e("INrefrenceId", "" + refrenceId);
 
 //            if (list.isEmpty()) {
             File file;
@@ -1237,12 +1236,12 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
 
                     String channelid = context.getString(R.string.default_notification_channel_id);
-                    Log.e("Path", "" + path.toString());
+                    //Log.e("Path", "" + path.toString());
                     Intent open = new Intent(Intent.ACTION_VIEW);
                     open.setDataAndType(path, "video/*");
                     open.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, open, 0);
-                    Log.e("INSIDE refrenceId", "" + refrenceId);
+                    //Log.e("INSIDE refrenceId", "" + refrenceId);
                     Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                     NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelid)
                             .setSmallIcon(R.mipmap.ic_launcher)

@@ -209,7 +209,7 @@ public class CommentBSFragment extends BottomSheetDialogFragment implements Comm
 
     @Override
     public void onProfileClick(View view, int position, Comment comment) {
-        Log.i("Profile","Clicked: "+comment.getId());
+        //Log.e("Profile","Clicked: "+comment.getId());
     }
 
     @Override
@@ -284,14 +284,14 @@ public class CommentBSFragment extends BottomSheetDialogFragment implements Comm
                             tvStatus.setVisibility(View.VISIBLE);
                         }
                         else {
-                            Log.e("TAG", "layout manager: is null");
+                            //Log.e("TAG", "layout manager: is null");
                         }
 
-                        Log.i("Comment","success");
+                        //Log.e("Comment","success");
                     }
                 }
                 else {
-                    Log.e("Comment","Not success "+response.code());
+                    //Log.e("Comment","Not success "+response.code());
                 }
                 layoutManager.setStackFromEnd(true);
             }

@@ -234,7 +234,7 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
             ((PreviewVideoActivity) context).finish();
         }
 //        if (context instanceof PreviewVideoActivity) {
-//            Log.e("TAG", "GotopostScreen: ");
+//            //Log.e("TAG", "GotopostScreen: ");
 //            Intent intent = new Intent();
 //            intent.putExtra("video_path", Variables.output_filter_file2);
 //            ((PreviewVideoActivity) context).setResult(RESULT_OK, intent);

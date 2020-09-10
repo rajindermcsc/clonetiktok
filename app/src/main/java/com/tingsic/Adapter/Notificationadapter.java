@@ -54,7 +54,7 @@ public class Notificationadapter extends RecyclerView.Adapter
         {
             ((MyViewholder)holder).title.setVisibility(View.GONE);
         }
-        Log.e(TAG, "onBindViewHolder: " + cur.getString(cur.getColumnIndex("notification_id")));
+        //Log.e(TAG, "onBindViewHolder: " + cur.getString(cur.getColumnIndex("notification_id")));
         ((MyViewholder)holder).title.setText(cur.getString(cur.getColumnIndex("notification_title")));
         ((MyViewholder)holder).desc.setText(cur.getString(cur.getColumnIndex("notification_description")));
         try
@@ -62,7 +62,7 @@ public class Notificationadapter extends RecyclerView.Adapter
             ((MyViewholder)holder).time.setText(cur.getString(cur.getColumnIndex("notification_date")));
         }catch(Exception e)
         {
-            Log.e(TAG, "onBindViewHolder: "+e.getMessage());
+            //Log.e(TAG, "onBindViewHolder: "+e.getMessage());
         }
         ((MyViewholder)holder).bellicon.setImageDrawable(context.getResources().getDrawable(R.drawable.bellicon));
     }
@@ -86,7 +86,7 @@ public class Notificationadapter extends RecyclerView.Adapter
         }
     }
     public void removeItem(int position) {
-        Log.e(TAG, "removeItem: "+position );
+        //Log.e(TAG, "removeItem: "+position );
         mDb.execSQL("delete from notificationtable where notification_id='"+noti_id.get(position)+"'");
 
         notifyItemRemoved(position);

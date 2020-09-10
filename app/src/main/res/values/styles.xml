@@ -86,4 +86,7 @@
         <item name="android:windowBackground">@color/white</item>
     </style>
 
+    <style name="Progressbar_style" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/app_color</item>
+    </style>
 </resources>

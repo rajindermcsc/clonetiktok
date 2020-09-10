@@ -191,7 +191,7 @@ public class ProfileFragment extends Fragment implements OnPostRemoveListener {
                     final String profilePath = response.body().getData().getProfilePath();
                     final String profilePic = response.body().getData().getProfilepic();
 
-                    Log.e(TAG, "onResponse: "+profilePath+profilePic);
+                    //Log.e(TAG, "onResponse: "+profilePath+profilePic);
 
                     if (profilePic.isEmpty()) {
                         Picasso.get().load(R.drawable.blank_profile).transform(new CircleTransform()).into(ivUser);
@@ -277,7 +277,7 @@ public class ProfileFragment extends Fragment implements OnPostRemoveListener {
 
             @Override
             public void onFailure(Call<UserResponse> call, Throwable t) {
-                //Log.e("ProfileFragment",t.getMessage());
+                ////Log.e("ProfileFragment",t.getMessage());
                 loadingView.setVisibility(View.GONE);
             }
         });
@@ -440,8 +440,8 @@ public class ProfileFragment extends Fragment implements OnPostRemoveListener {
 
 
 
-                Log.i(TAG, "onActivityResult: fname"+fname);
-                Log.i(TAG, "onActivityResult: bio"+bio);
+                //Log.e(TAG, "onActivityResult: fname"+fname);
+                //Log.e(TAG, "onActivityResult: bio"+bio);
             }
         }
     }
@@ -453,7 +453,7 @@ public class ProfileFragment extends Fragment implements OnPostRemoveListener {
         String json = "{\"id\":\""+id+"\",\"isProfile\":false}";
         String title = "Tingsic profile";
 
-        Log.i("ShareJson","Json Object: "+json);
+        //Log.e("ShareJson","Json Object: "+json);
         BranchUniversalObject buo = new BranchUniversalObject()
                 .setCanonicalIdentifier("content/12345")
                 .setTitle("Tingsic")
@@ -500,7 +500,7 @@ public class ProfileFragment extends Fragment implements OnPostRemoveListener {
             }
             @Override
             public void onLinkShareResponse(String sharedLink, String sharedChannel, BranchError error) {
-                Log.i("Branch", "onLinkShareResponse: SharingLink: "+sharedLink);
+                //Log.e("Branch", "onLinkShareResponse: SharingLink: "+sharedLink);
             }
             @Override
             public void onChannelSelected(String channelName) {
@@ -574,13 +574,13 @@ public class ProfileFragment extends Fragment implements OnPostRemoveListener {
         call.enqueue(new Callback<DeleteVideoResponse>() {
             @Override
             public void onResponse(Call<DeleteVideoResponse> call, Response<DeleteVideoResponse> response) {
-                Log.i(TAG, "onResponse: "+response.code());
+                //Log.e(TAG, "onResponse: "+response.code());
                 if (response.isSuccessful()) {
                     if (response.body().getSuccess() == 1) {
                         ProfileFragment.this.onPostRemoveCallback.onSuccess(position);
                     }
                     else {
-                        Log.i(TAG, "onResponse: "+response.body().getMessage());
+                        //Log.e(TAG, "onResponse: "+response.body().getMessage());
                         ProfileFragment.this.onPostRemoveCallback.onFail();
                     }
                 }
@@ -589,7 +589,7 @@ public class ProfileFragment extends Fragment implements OnPostRemoveListener {
 
             @Override
             public void onFailure(Call<DeleteVideoResponse> call, Throwable t) {
-                Log.e(TAG, "onFailure: "+t.getMessage());
+                //Log.e(TAG, "onFailure: "+t.getMessage());
                 ProfileFragment.this.onPostRemoveCallback.onFail();
                 loadingView.setVisibility(View.GONE);
             }

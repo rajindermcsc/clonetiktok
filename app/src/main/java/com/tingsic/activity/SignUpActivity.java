@@ -237,8 +237,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             public void onResponse(Call<SignUpResponse> call, Response<SignUpResponse> response) {
                 if (response.isSuccessful()){
                     if (response.body().getSuccess() == 1){
-                        Log.e(TAG, "onResponse: "+response.raw().request().url());
-                        Log.e(TAG, "onResponse: "+response.body());
+                        //Log.e(TAG, "onResponse: "+response.raw().request().url());
+                        //Log.e(TAG, "onResponse: "+response.body());
 
                         int id = response.body().getUserId();
                         String token = response.body().getToken();
@@ -281,9 +281,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     else {
                         Toast.makeText(SignUpActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                         PreferenceManager.getDefaultSharedPreferences(SignUpActivity.this).edit().putBoolean("isLoggedIn",false).apply();
-                        Log.e(TAG, "onResponse: Error success=0");
+                        //Log.e(TAG, "onResponse: Error success=0");
                     }
-                    Log.e(TAG, "onResponse: Error success= "+response.body().getSuccess()+" "+response.body().getMessage());
+                    //Log.e(TAG, "onResponse: Error success= "+response.body().getSuccess()+" "+response.body().getMessage());
                 }
                 loader.setVisibility(View.GONE);
             }

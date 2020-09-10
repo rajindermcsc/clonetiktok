@@ -79,6 +79,7 @@ public class BannerActivity extends AppCompatActivity {
 
             token = NotificationService.getToken(this);
         }
+        String finalToken = token;
         new Handler().postDelayed(new Runnable() {
 
 
@@ -86,6 +87,7 @@ public class BannerActivity extends AppCompatActivity {
             public void run() {
                 // This method will be executed once the timer is over
                 Intent i = new Intent(BannerActivity.this, MainActivity.class);
+                i.putExtra("token", finalToken);
                 startActivity(i);
                 finish();
             }
@@ -172,7 +174,7 @@ public class BannerActivity extends AppCompatActivity {
             token = NotificationService.getToken(this);
         }
 
-        Log.i(TAG, "getBannerAPI: "+token);
+        //Log.e(TAG, "getBannerAPI: "+token);
 
         BannerRequest bannerRequest = new BannerRequest();
 
@@ -280,7 +282,7 @@ public class BannerActivity extends AppCompatActivity {
         //resume app from app launcher and prevent if live notification or shared video is there
         boolean isLiveVideo = getIntent().getBooleanExtra("live_noti",false);
         boolean isShared = getIntent().getBooleanExtra("isShared",false);
-        Log.i(TAG, "onCreate: "+isLiveVideo+isShared);
+        //Log.e(TAG, "onCreate: "+isLiveVideo+isShared);
         if (!isLiveVideo && !isShared) {
             if (!isTaskRoot()) {
                 finish();
@@ -314,7 +316,7 @@ public class BannerActivity extends AppCompatActivity {
                     // params are the deep linked params associated with the link that the user clicked -> was re-directed to this app
                     // params will be empty if no data found
                     // ... insert custom logic here ...
-                    Log.i("BRANCH SDK", referringParams.toString());
+                    //Log.e("BRANCH SDK", referringParams.toString());
 
                     try {
                         if (referringParams.has("data")) {
@@ -341,7 +343,7 @@ public class BannerActivity extends AppCompatActivity {
                     }
 
                 } else {
-                    Log.i("BRANCH SDK", error.getMessage());
+                    //Log.e("BRANCH SDK", error.getMessage());
                 }
             }
         }, BannerActivity.this.getIntent().getData(), BannerActivity.this);
