@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Tingsic</string>
+    <string name="app_name">TwinFlows</string>
     <string name="e_mail">E-mail</string>
     <string name="password">Password</string>
     <string name="log_in">Log In</string>
@@ -13,10 +13,10 @@
     <string name="err_msg_email">Please enter your E-mail.</string>
     <string name="send_e_mail">Send E-mail</string>
     <string name="username">Username</string>
-    <string name="sign_up_title">Sign Up to Tingsic</string>
+    <string name="sign_up_title">Sign Up to TwinFlows</string>
     <string name="terms_and_conditions">By signing up,you confirm that\nyou agree to our Terms &amp; Conditions</string>
     <string name="forget_password">Forget password? Click here</string>
-    <string name="log_in_title">Log in to Tingsic</string>
+    <string name="log_in_title">Log in to TwinFlows</string>
     <string name="follow">follow</string>
     <string name="unfollow">following</string>
     <string name="or">OR</string>
@@ -28,7 +28,7 @@
     </string>
     <string name="write_a_comment">Write a comment…</string>
     <string name="update_profile">Update Profile</string>
-    <string name="default_notification_channel_id">Tingsic</string>
+    <string name="default_notification_channel_id">TwinFlows</string>
     <string name="done">Done</string>
     <string name="bio">Bio</string>
     <string name="contests">Contests</string>
@@ -42,7 +42,7 @@
     <string name="err_pin_code">Please enter proper PIN Code.</string>
     <string name="err_mobile_no">Enter valid mobile number.</string>
     <string name="err_must_login">You must log in to watch your following videos.</string>
-    <string name="err_large_file">The file you\'ve choosed is larger than 5MB. Tingsic provide uploading file below 5MB. Would you like to compress the file?</string>
+    <string name="err_large_file">The file you\'ve choosed is larger than 5MB. TwinFlows provide uploading file below 5MB. Would you like to compress the file?</string>
     <string name="ok">OK</string>
     <string name="dismiss">Dismiss</string>
     <string name="compresssing">Compresssing…</string>
